@@ -8,7 +8,7 @@ import sys
 import controller
 
 def menu():
-    nombre_archivo = str(input("Introduzca el nombre del archivo a verificar: ")).lower
+    nombre_archivo = str(input("Introduzca el nombre del archivo a verificar: "))
     return nombre_archivo
     
 def leer_archivo(nombre):

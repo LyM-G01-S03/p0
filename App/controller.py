@@ -9,8 +9,11 @@ def load_data(nombre):
     archivo = cf.data_dir + nombre
     with open(archivo) as file:
         verificacion = True
-        while verificacion == True:
+        longitud = True
+        while (verificacion == True) and (longitud == True):
             linea = file.readline
+            if len(linea) == 0:
+                longitud = False
             resultado = model.verificar(linea)
             if resultado ==False:
                 verificacion = False
