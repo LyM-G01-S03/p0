@@ -8,7 +8,8 @@ import sys
 import controller
 
 def menu():
-    nombre_archivo = str(input("Introduzca el nombre del archivo a verificar: "))
+    #nombre_archivo = str(input("Introduzca el nombre del archivo a verificar: "))
+    nombre_archivo = "ejemplo_valido.txt"
     return nombre_archivo
     
 def leer_archivo(nombre):
@@ -27,11 +28,11 @@ if __name__ == "__main__":
             print("Yes")
         elif resultado is False:
             print("No")
-        continuacion = str(input("Desea verificar otro archivo (Si / No): ")).lower
-        if continuacion == "no":
+        continuacion = int(input("Desea verificar otro archivo (Si = 1 / No = 0): "))
+        if continuacion == 0:
             working = False
             print("\nGracias por utilizar el programa")
-        elif continuacion != "si":
+        elif continuacion != (0 or 1):
             print("Opción errónea, vuelva a elegir.\n")
     sys.exit(0)
         
