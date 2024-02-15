@@ -1,0 +1,1269 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Grammar
+
+Rule 0     S' -> program
+Rule 1     program -> <empty>
+Rule 2     program -> instruction program
+Rule 3     instruction -> command
+Rule 4     instruction -> control_structure
+Rule 5     instruction -> function_call
+Rule 6     command -> LPAREN command_type params RPAREN
+Rule 7     command_type -> DEFVAR
+Rule 8     command_type -> ASSIGN
+Rule 9     command_type -> MOVE
+Rule 10    command_type -> SKIP
+Rule 11    command_type -> TURN
+Rule 12    command_type -> FACE
+Rule 13    command_type -> PUT
+Rule 14    command_type -> PICK
+Rule 15    command_type -> MOVE_DIR
+Rule 16    command_type -> RUN_DIRS
+Rule 17    command_type -> MOVE_FACE
+Rule 18    command_type -> NULL
+Rule 19    params -> param
+Rule 20    params -> params COMMA param
+Rule 21    param -> NAME
+Rule 22    param -> CONSTANT
+Rule 23    param -> NUMBER
+Rule 24    control_structure -> conditional
+Rule 25    control_structure -> repeat
+Rule 26    control_structure -> repeat_times
+Rule 27    control_structure -> function_definition
+Rule 28    control_structure -> command
+Rule 29    conditional -> LPAREN IF condition instruction instruction RPAREN
+Rule 30    repeat -> LPAREN LOOP condition instruction RPAREN
+Rule 31    repeat_times -> LPAREN REPEAT param instruction RPAREN
+Rule 32    function_definition -> LPAREN DEFUN NAME LPAREN params RPAREN instruction RPAREN
+Rule 33    function_call -> LPAREN NAME function_params RPAREN
+Rule 34    function_params -> param
+Rule 35    function_params -> function_params COMMA param
+Rule 36    condition -> facing
+Rule 37    condition -> blocked
+Rule 38    condition -> can_put
+Rule 39    condition -> can_pick
+Rule 40    condition -> can_move
+Rule 41    condition -> is_zero
+Rule 42    condition -> not_condition
+Rule 43    condition -> NAME
+Rule 44    condition -> CONSTANT
+Rule 45    condition -> NUMBER
+Rule 46    facing -> LPAREN FACING LPAREN COLON NAME RPAREN RPAREN
+Rule 47    blocked -> LPAREN BLOCKED LPAREN RPAREN RPAREN
+Rule 48    can_put -> LPAREN CAN_PUT COLON NAME param RPAREN
+Rule 49    can_pick -> LPAREN CAN_PICK COLON NAME param RPAREN
+Rule 50    can_move -> LPAREN CAN_MOVE COLON NAME RPAREN
+Rule 51    is_zero -> LPAREN IS_ZERO COLON NAME RPAREN
+Rule 52    not_condition -> LPAREN NOT condition RPAREN
+
+Terminals, with rules where they appear
+
+ASSIGN               : 8
+BLOCKED              : 47
+CAN_MOVE             : 50
+CAN_PICK             : 49
+CAN_PUT              : 48
+COLON                : 46 48 49 50 51
+COMMA                : 20 35
+CONSTANT             : 22 44
+DEFUN                : 32
+DEFVAR               : 7
+FACE                 : 12
+FACING               : 46
+IF                   : 29
+IS_ZERO              : 51
+LOOP                 : 30
+LPAREN               : 6 29 30 31 32 32 33 46 46 47 47 48 49 50 51 52
+MOVE                 : 9
+MOVE_DIR             : 15
+MOVE_FACE            : 17
+NAME                 : 21 32 33 43 46 48 49 50 51
+NOT                  : 52
+NULL                 : 18
+NUMBER               : 23 45
+PICK                 : 14
+PUT                  : 13
+REPEAT               : 31
+RPAREN               : 6 29 30 31 32 32 33 46 46 47 47 48 49 50 51 52
+RUN_DIRS             : 16
+SKIP                 : 10
+TURN                 : 11
+error                : 
+
+Nonterminals, with rules where they appear
+
+blocked              : 37
+can_move             : 40
+can_pick             : 39
+can_put              : 38
+command              : 3 28
+command_type         : 6
+condition            : 29 30 52
+conditional          : 24
+control_structure    : 4
+facing               : 36
+function_call        : 5
+function_definition  : 27
+function_params      : 33 35
+instruction          : 2 29 29 30 31 32
+is_zero              : 41
+not_condition        : 42
+param                : 19 20 31 34 35 48 49
+params               : 6 20 32
+program              : 2 0
+repeat               : 25
+repeat_times         : 26
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . program
+    (1) program -> .
+    (2) program -> . instruction program
+    (3) instruction -> . command
+    (4) instruction -> . control_structure
+    (5) instruction -> . function_call
+    (6) command -> . LPAREN command_type params RPAREN
+    (24) control_structure -> . conditional
+    (25) control_structure -> . repeat
+    (26) control_structure -> . repeat_times
+    (27) control_structure -> . function_definition
+    (28) control_structure -> . command
+    (33) function_call -> . LPAREN NAME function_params RPAREN
+    (29) conditional -> . LPAREN IF condition instruction instruction RPAREN
+    (30) repeat -> . LPAREN LOOP condition instruction RPAREN
+    (31) repeat_times -> . LPAREN REPEAT param instruction RPAREN
+    (32) function_definition -> . LPAREN DEFUN NAME LPAREN params RPAREN instruction RPAREN
+
+    $end            reduce using rule 1 (program -> .)
+    LPAREN          shift and go to state 6
+
+    program                        shift and go to state 1
+    instruction                    shift and go to state 2
+    command                        shift and go to state 3
+    control_structure              shift and go to state 4
+    function_call                  shift and go to state 5
+    conditional                    shift and go to state 7
+    repeat                         shift and go to state 8
+    repeat_times                   shift and go to state 9
+    function_definition            shift and go to state 10
+
+state 1
+
+    (0) S' -> program .
+
+
+
+state 2
+
+    (2) program -> instruction . program
+    (1) program -> .
+    (2) program -> . instruction program
+    (3) instruction -> . command
+    (4) instruction -> . control_structure
+    (5) instruction -> . function_call
+    (6) command -> . LPAREN command_type params RPAREN
+    (24) control_structure -> . conditional
+    (25) control_structure -> . repeat
+    (26) control_structure -> . repeat_times
+    (27) control_structure -> . function_definition
+    (28) control_structure -> . command
+    (33) function_call -> . LPAREN NAME function_params RPAREN
+    (29) conditional -> . LPAREN IF condition instruction instruction RPAREN
+    (30) repeat -> . LPAREN LOOP condition instruction RPAREN
+    (31) repeat_times -> . LPAREN REPEAT param instruction RPAREN
+    (32) function_definition -> . LPAREN DEFUN NAME LPAREN params RPAREN instruction RPAREN
+
+    $end            reduce using rule 1 (program -> .)
+    LPAREN          shift and go to state 6
+
+    instruction                    shift and go to state 2
+    program                        shift and go to state 11
+    command                        shift and go to state 3
+    control_structure              shift and go to state 4
+    function_call                  shift and go to state 5
+    conditional                    shift and go to state 7
+    repeat                         shift and go to state 8
+    repeat_times                   shift and go to state 9
+    function_definition            shift and go to state 10
+
+state 3
+
+    (3) instruction -> command .
+    (28) control_structure -> command .
+
+  ! reduce/reduce conflict for LPAREN resolved using rule 3 (instruction -> command .)
+  ! reduce/reduce conflict for $end resolved using rule 3 (instruction -> command .)
+  ! reduce/reduce conflict for RPAREN resolved using rule 3 (instruction -> command .)
+    LPAREN          reduce using rule 3 (instruction -> command .)
+    $end            reduce using rule 3 (instruction -> command .)
+    RPAREN          reduce using rule 3 (instruction -> command .)
+
+  ! LPAREN          [ reduce using rule 28 (control_structure -> command .) ]
+  ! $end            [ reduce using rule 28 (control_structure -> command .) ]
+  ! RPAREN          [ reduce using rule 28 (control_structure -> command .) ]
+
+
+state 4
+
+    (4) instruction -> control_structure .
+
+    LPAREN          reduce using rule 4 (instruction -> control_structure .)
+    $end            reduce using rule 4 (instruction -> control_structure .)
+    RPAREN          reduce using rule 4 (instruction -> control_structure .)
+
+
+state 5
+
+    (5) instruction -> function_call .
+
+    LPAREN          reduce using rule 5 (instruction -> function_call .)
+    $end            reduce using rule 5 (instruction -> function_call .)
+    RPAREN          reduce using rule 5 (instruction -> function_call .)
+
+
+state 6
+
+    (6) command -> LPAREN . command_type params RPAREN
+    (33) function_call -> LPAREN . NAME function_params RPAREN
+    (29) conditional -> LPAREN . IF condition instruction instruction RPAREN
+    (30) repeat -> LPAREN . LOOP condition instruction RPAREN
+    (31) repeat_times -> LPAREN . REPEAT param instruction RPAREN
+    (32) function_definition -> LPAREN . DEFUN NAME LPAREN params RPAREN instruction RPAREN
+    (7) command_type -> . DEFVAR
+    (8) command_type -> . ASSIGN
+    (9) command_type -> . MOVE
+    (10) command_type -> . SKIP
+    (11) command_type -> . TURN
+    (12) command_type -> . FACE
+    (13) command_type -> . PUT
+    (14) command_type -> . PICK
+    (15) command_type -> . MOVE_DIR
+    (16) command_type -> . RUN_DIRS
+    (17) command_type -> . MOVE_FACE
+    (18) command_type -> . NULL
+
+    NAME            shift and go to state 13
+    IF              shift and go to state 14
+    LOOP            shift and go to state 15
+    REPEAT          shift and go to state 16
+    DEFUN           shift and go to state 17
+    DEFVAR          shift and go to state 18
+    ASSIGN          shift and go to state 19
+    MOVE            shift and go to state 20
+    SKIP            shift and go to state 21
+    TURN            shift and go to state 22
+    FACE            shift and go to state 23
+    PUT             shift and go to state 24
+    PICK            shift and go to state 25
+    MOVE_DIR        shift and go to state 26
+    RUN_DIRS        shift and go to state 27
+    MOVE_FACE       shift and go to state 28
+    NULL            shift and go to state 29
+
+    command_type                   shift and go to state 12
+
+state 7
+
+    (24) control_structure -> conditional .
+
+    LPAREN          reduce using rule 24 (control_structure -> conditional .)
+    $end            reduce using rule 24 (control_structure -> conditional .)
+    RPAREN          reduce using rule 24 (control_structure -> conditional .)
+
+
+state 8
+
+    (25) control_structure -> repeat .
+
+    LPAREN          reduce using rule 25 (control_structure -> repeat .)
+    $end            reduce using rule 25 (control_structure -> repeat .)
+    RPAREN          reduce using rule 25 (control_structure -> repeat .)
+
+
+state 9
+
+    (26) control_structure -> repeat_times .
+
+    LPAREN          reduce using rule 26 (control_structure -> repeat_times .)
+    $end            reduce using rule 26 (control_structure -> repeat_times .)
+    RPAREN          reduce using rule 26 (control_structure -> repeat_times .)
+
+
+state 10
+
+    (27) control_structure -> function_definition .
+
+    LPAREN          reduce using rule 27 (control_structure -> function_definition .)
+    $end            reduce using rule 27 (control_structure -> function_definition .)
+    RPAREN          reduce using rule 27 (control_structure -> function_definition .)
+
+
+state 11
+
+    (2) program -> instruction program .
+
+    $end            reduce using rule 2 (program -> instruction program .)
+
+
+state 12
+
+    (6) command -> LPAREN command_type . params RPAREN
+    (19) params -> . param
+    (20) params -> . params COMMA param
+    (21) param -> . NAME
+    (22) param -> . CONSTANT
+    (23) param -> . NUMBER
+
+    NAME            shift and go to state 32
+    CONSTANT        shift and go to state 33
+    NUMBER          shift and go to state 34
+
+    params                         shift and go to state 30
+    param                          shift and go to state 31
+
+state 13
+
+    (33) function_call -> LPAREN NAME . function_params RPAREN
+    (34) function_params -> . param
+    (35) function_params -> . function_params COMMA param
+    (21) param -> . NAME
+    (22) param -> . CONSTANT
+    (23) param -> . NUMBER
+
+    NAME            shift and go to state 32
+    CONSTANT        shift and go to state 33
+    NUMBER          shift and go to state 34
+
+    function_params                shift and go to state 35
+    param                          shift and go to state 36
+
+state 14
+
+    (29) conditional -> LPAREN IF . condition instruction instruction RPAREN
+    (36) condition -> . facing
+    (37) condition -> . blocked
+    (38) condition -> . can_put
+    (39) condition -> . can_pick
+    (40) condition -> . can_move
+    (41) condition -> . is_zero
+    (42) condition -> . not_condition
+    (43) condition -> . NAME
+    (44) condition -> . CONSTANT
+    (45) condition -> . NUMBER
+    (46) facing -> . LPAREN FACING LPAREN COLON NAME RPAREN RPAREN
+    (47) blocked -> . LPAREN BLOCKED LPAREN RPAREN RPAREN
+    (48) can_put -> . LPAREN CAN_PUT COLON NAME param RPAREN
+    (49) can_pick -> . LPAREN CAN_PICK COLON NAME param RPAREN
+    (50) can_move -> . LPAREN CAN_MOVE COLON NAME RPAREN
+    (51) is_zero -> . LPAREN IS_ZERO COLON NAME RPAREN
+    (52) not_condition -> . LPAREN NOT condition RPAREN
+
+    NAME            shift and go to state 46
+    CONSTANT        shift and go to state 47
+    NUMBER          shift and go to state 48
+    LPAREN          shift and go to state 37
+
+    condition                      shift and go to state 38
+    facing                         shift and go to state 39
+    blocked                        shift and go to state 40
+    can_put                        shift and go to state 41
+    can_pick                       shift and go to state 42
+    can_move                       shift and go to state 43
+    is_zero                        shift and go to state 44
+    not_condition                  shift and go to state 45
+
+state 15
+
+    (30) repeat -> LPAREN LOOP . condition instruction RPAREN
+    (36) condition -> . facing
+    (37) condition -> . blocked
+    (38) condition -> . can_put
+    (39) condition -> . can_pick
+    (40) condition -> . can_move
+    (41) condition -> . is_zero
+    (42) condition -> . not_condition
+    (43) condition -> . NAME
+    (44) condition -> . CONSTANT
+    (45) condition -> . NUMBER
+    (46) facing -> . LPAREN FACING LPAREN COLON NAME RPAREN RPAREN
+    (47) blocked -> . LPAREN BLOCKED LPAREN RPAREN RPAREN
+    (48) can_put -> . LPAREN CAN_PUT COLON NAME param RPAREN
+    (49) can_pick -> . LPAREN CAN_PICK COLON NAME param RPAREN
+    (50) can_move -> . LPAREN CAN_MOVE COLON NAME RPAREN
+    (51) is_zero -> . LPAREN IS_ZERO COLON NAME RPAREN
+    (52) not_condition -> . LPAREN NOT condition RPAREN
+
+    NAME            shift and go to state 46
+    CONSTANT        shift and go to state 47
+    NUMBER          shift and go to state 48
+    LPAREN          shift and go to state 37
+
+    condition                      shift and go to state 49
+    facing                         shift and go to state 39
+    blocked                        shift and go to state 40
+    can_put                        shift and go to state 41
+    can_pick                       shift and go to state 42
+    can_move                       shift and go to state 43
+    is_zero                        shift and go to state 44
+    not_condition                  shift and go to state 45
+
+state 16
+
+    (31) repeat_times -> LPAREN REPEAT . param instruction RPAREN
+    (21) param -> . NAME
+    (22) param -> . CONSTANT
+    (23) param -> . NUMBER
+
+    NAME            shift and go to state 32
+    CONSTANT        shift and go to state 33
+    NUMBER          shift and go to state 34
+
+    param                          shift and go to state 50
+
+state 17
+
+    (32) function_definition -> LPAREN DEFUN . NAME LPAREN params RPAREN instruction RPAREN
+
+    NAME            shift and go to state 51
+
+
+state 18
+
+    (7) command_type -> DEFVAR .
+
+    NAME            reduce using rule 7 (command_type -> DEFVAR .)
+    CONSTANT        reduce using rule 7 (command_type -> DEFVAR .)
+    NUMBER          reduce using rule 7 (command_type -> DEFVAR .)
+
+
+state 19
+
+    (8) command_type -> ASSIGN .
+
+    NAME            reduce using rule 8 (command_type -> ASSIGN .)
+    CONSTANT        reduce using rule 8 (command_type -> ASSIGN .)
+    NUMBER          reduce using rule 8 (command_type -> ASSIGN .)
+
+
+state 20
+
+    (9) command_type -> MOVE .
+
+    NAME            reduce using rule 9 (command_type -> MOVE .)
+    CONSTANT        reduce using rule 9 (command_type -> MOVE .)
+    NUMBER          reduce using rule 9 (command_type -> MOVE .)
+
+
+state 21
+
+    (10) command_type -> SKIP .
+
+    NAME            reduce using rule 10 (command_type -> SKIP .)
+    CONSTANT        reduce using rule 10 (command_type -> SKIP .)
+    NUMBER          reduce using rule 10 (command_type -> SKIP .)
+
+
+state 22
+
+    (11) command_type -> TURN .
+
+    NAME            reduce using rule 11 (command_type -> TURN .)
+    CONSTANT        reduce using rule 11 (command_type -> TURN .)
+    NUMBER          reduce using rule 11 (command_type -> TURN .)
+
+
+state 23
+
+    (12) command_type -> FACE .
+
+    NAME            reduce using rule 12 (command_type -> FACE .)
+    CONSTANT        reduce using rule 12 (command_type -> FACE .)
+    NUMBER          reduce using rule 12 (command_type -> FACE .)
+
+
+state 24
+
+    (13) command_type -> PUT .
+
+    NAME            reduce using rule 13 (command_type -> PUT .)
+    CONSTANT        reduce using rule 13 (command_type -> PUT .)
+    NUMBER          reduce using rule 13 (command_type -> PUT .)
+
+
+state 25
+
+    (14) command_type -> PICK .
+
+    NAME            reduce using rule 14 (command_type -> PICK .)
+    CONSTANT        reduce using rule 14 (command_type -> PICK .)
+    NUMBER          reduce using rule 14 (command_type -> PICK .)
+
+
+state 26
+
+    (15) command_type -> MOVE_DIR .
+
+    NAME            reduce using rule 15 (command_type -> MOVE_DIR .)
+    CONSTANT        reduce using rule 15 (command_type -> MOVE_DIR .)
+    NUMBER          reduce using rule 15 (command_type -> MOVE_DIR .)
+
+
+state 27
+
+    (16) command_type -> RUN_DIRS .
+
+    NAME            reduce using rule 16 (command_type -> RUN_DIRS .)
+    CONSTANT        reduce using rule 16 (command_type -> RUN_DIRS .)
+    NUMBER          reduce using rule 16 (command_type -> RUN_DIRS .)
+
+
+state 28
+
+    (17) command_type -> MOVE_FACE .
+
+    NAME            reduce using rule 17 (command_type -> MOVE_FACE .)
+    CONSTANT        reduce using rule 17 (command_type -> MOVE_FACE .)
+    NUMBER          reduce using rule 17 (command_type -> MOVE_FACE .)
+
+
+state 29
+
+    (18) command_type -> NULL .
+
+    NAME            reduce using rule 18 (command_type -> NULL .)
+    CONSTANT        reduce using rule 18 (command_type -> NULL .)
+    NUMBER          reduce using rule 18 (command_type -> NULL .)
+
+
+state 30
+
+    (6) command -> LPAREN command_type params . RPAREN
+    (20) params -> params . COMMA param
+
+    RPAREN          shift and go to state 52
+    COMMA           shift and go to state 53
+
+
+state 31
+
+    (19) params -> param .
+
+    RPAREN          reduce using rule 19 (params -> param .)
+    COMMA           reduce using rule 19 (params -> param .)
+
+
+state 32
+
+    (21) param -> NAME .
+
+    RPAREN          reduce using rule 21 (param -> NAME .)
+    COMMA           reduce using rule 21 (param -> NAME .)
+    LPAREN          reduce using rule 21 (param -> NAME .)
+
+
+state 33
+
+    (22) param -> CONSTANT .
+
+    RPAREN          reduce using rule 22 (param -> CONSTANT .)
+    COMMA           reduce using rule 22 (param -> CONSTANT .)
+    LPAREN          reduce using rule 22 (param -> CONSTANT .)
+
+
+state 34
+
+    (23) param -> NUMBER .
+
+    RPAREN          reduce using rule 23 (param -> NUMBER .)
+    COMMA           reduce using rule 23 (param -> NUMBER .)
+    LPAREN          reduce using rule 23 (param -> NUMBER .)
+
+
+state 35
+
+    (33) function_call -> LPAREN NAME function_params . RPAREN
+    (35) function_params -> function_params . COMMA param
+
+    RPAREN          shift and go to state 54
+    COMMA           shift and go to state 55
+
+
+state 36
+
+    (34) function_params -> param .
+
+    RPAREN          reduce using rule 34 (function_params -> param .)
+    COMMA           reduce using rule 34 (function_params -> param .)
+
+
+state 37
+
+    (46) facing -> LPAREN . FACING LPAREN COLON NAME RPAREN RPAREN
+    (47) blocked -> LPAREN . BLOCKED LPAREN RPAREN RPAREN
+    (48) can_put -> LPAREN . CAN_PUT COLON NAME param RPAREN
+    (49) can_pick -> LPAREN . CAN_PICK COLON NAME param RPAREN
+    (50) can_move -> LPAREN . CAN_MOVE COLON NAME RPAREN
+    (51) is_zero -> LPAREN . IS_ZERO COLON NAME RPAREN
+    (52) not_condition -> LPAREN . NOT condition RPAREN
+
+    FACING          shift and go to state 56
+    BLOCKED         shift and go to state 57
+    CAN_PUT         shift and go to state 58
+    CAN_PICK        shift and go to state 59
+    CAN_MOVE        shift and go to state 60
+    IS_ZERO         shift and go to state 61
+    NOT             shift and go to state 62
+
+
+state 38
+
+    (29) conditional -> LPAREN IF condition . instruction instruction RPAREN
+    (3) instruction -> . command
+    (4) instruction -> . control_structure
+    (5) instruction -> . function_call
+    (6) command -> . LPAREN command_type params RPAREN
+    (24) control_structure -> . conditional
+    (25) control_structure -> . repeat
+    (26) control_structure -> . repeat_times
+    (27) control_structure -> . function_definition
+    (28) control_structure -> . command
+    (33) function_call -> . LPAREN NAME function_params RPAREN
+    (29) conditional -> . LPAREN IF condition instruction instruction RPAREN
+    (30) repeat -> . LPAREN LOOP condition instruction RPAREN
+    (31) repeat_times -> . LPAREN REPEAT param instruction RPAREN
+    (32) function_definition -> . LPAREN DEFUN NAME LPAREN params RPAREN instruction RPAREN
+
+    LPAREN          shift and go to state 6
+
+    instruction                    shift and go to state 63
+    command                        shift and go to state 3
+    control_structure              shift and go to state 4
+    function_call                  shift and go to state 5
+    conditional                    shift and go to state 7
+    repeat                         shift and go to state 8
+    repeat_times                   shift and go to state 9
+    function_definition            shift and go to state 10
+
+state 39
+
+    (36) condition -> facing .
+
+    LPAREN          reduce using rule 36 (condition -> facing .)
+    RPAREN          reduce using rule 36 (condition -> facing .)
+
+
+state 40
+
+    (37) condition -> blocked .
+
+    LPAREN          reduce using rule 37 (condition -> blocked .)
+    RPAREN          reduce using rule 37 (condition -> blocked .)
+
+
+state 41
+
+    (38) condition -> can_put .
+
+    LPAREN          reduce using rule 38 (condition -> can_put .)
+    RPAREN          reduce using rule 38 (condition -> can_put .)
+
+
+state 42
+
+    (39) condition -> can_pick .
+
+    LPAREN          reduce using rule 39 (condition -> can_pick .)
+    RPAREN          reduce using rule 39 (condition -> can_pick .)
+
+
+state 43
+
+    (40) condition -> can_move .
+
+    LPAREN          reduce using rule 40 (condition -> can_move .)
+    RPAREN          reduce using rule 40 (condition -> can_move .)
+
+
+state 44
+
+    (41) condition -> is_zero .
+
+    LPAREN          reduce using rule 41 (condition -> is_zero .)
+    RPAREN          reduce using rule 41 (condition -> is_zero .)
+
+
+state 45
+
+    (42) condition -> not_condition .
+
+    LPAREN          reduce using rule 42 (condition -> not_condition .)
+    RPAREN          reduce using rule 42 (condition -> not_condition .)
+
+
+state 46
+
+    (43) condition -> NAME .
+
+    LPAREN          reduce using rule 43 (condition -> NAME .)
+    RPAREN          reduce using rule 43 (condition -> NAME .)
+
+
+state 47
+
+    (44) condition -> CONSTANT .
+
+    LPAREN          reduce using rule 44 (condition -> CONSTANT .)
+    RPAREN          reduce using rule 44 (condition -> CONSTANT .)
+
+
+state 48
+
+    (45) condition -> NUMBER .
+
+    LPAREN          reduce using rule 45 (condition -> NUMBER .)
+    RPAREN          reduce using rule 45 (condition -> NUMBER .)
+
+
+state 49
+
+    (30) repeat -> LPAREN LOOP condition . instruction RPAREN
+    (3) instruction -> . command
+    (4) instruction -> . control_structure
+    (5) instruction -> . function_call
+    (6) command -> . LPAREN command_type params RPAREN
+    (24) control_structure -> . conditional
+    (25) control_structure -> . repeat
+    (26) control_structure -> . repeat_times
+    (27) control_structure -> . function_definition
+    (28) control_structure -> . command
+    (33) function_call -> . LPAREN NAME function_params RPAREN
+    (29) conditional -> . LPAREN IF condition instruction instruction RPAREN
+    (30) repeat -> . LPAREN LOOP condition instruction RPAREN
+    (31) repeat_times -> . LPAREN REPEAT param instruction RPAREN
+    (32) function_definition -> . LPAREN DEFUN NAME LPAREN params RPAREN instruction RPAREN
+
+    LPAREN          shift and go to state 6
+
+    instruction                    shift and go to state 64
+    command                        shift and go to state 3
+    control_structure              shift and go to state 4
+    function_call                  shift and go to state 5
+    conditional                    shift and go to state 7
+    repeat                         shift and go to state 8
+    repeat_times                   shift and go to state 9
+    function_definition            shift and go to state 10
+
+state 50
+
+    (31) repeat_times -> LPAREN REPEAT param . instruction RPAREN
+    (3) instruction -> . command
+    (4) instruction -> . control_structure
+    (5) instruction -> . function_call
+    (6) command -> . LPAREN command_type params RPAREN
+    (24) control_structure -> . conditional
+    (25) control_structure -> . repeat
+    (26) control_structure -> . repeat_times
+    (27) control_structure -> . function_definition
+    (28) control_structure -> . command
+    (33) function_call -> . LPAREN NAME function_params RPAREN
+    (29) conditional -> . LPAREN IF condition instruction instruction RPAREN
+    (30) repeat -> . LPAREN LOOP condition instruction RPAREN
+    (31) repeat_times -> . LPAREN REPEAT param instruction RPAREN
+    (32) function_definition -> . LPAREN DEFUN NAME LPAREN params RPAREN instruction RPAREN
+
+    LPAREN          shift and go to state 6
+
+    instruction                    shift and go to state 65
+    command                        shift and go to state 3
+    control_structure              shift and go to state 4
+    function_call                  shift and go to state 5
+    conditional                    shift and go to state 7
+    repeat                         shift and go to state 8
+    repeat_times                   shift and go to state 9
+    function_definition            shift and go to state 10
+
+state 51
+
+    (32) function_definition -> LPAREN DEFUN NAME . LPAREN params RPAREN instruction RPAREN
+
+    LPAREN          shift and go to state 66
+
+
+state 52
+
+    (6) command -> LPAREN command_type params RPAREN .
+
+    LPAREN          reduce using rule 6 (command -> LPAREN command_type params RPAREN .)
+    $end            reduce using rule 6 (command -> LPAREN command_type params RPAREN .)
+    RPAREN          reduce using rule 6 (command -> LPAREN command_type params RPAREN .)
+
+
+state 53
+
+    (20) params -> params COMMA . param
+    (21) param -> . NAME
+    (22) param -> . CONSTANT
+    (23) param -> . NUMBER
+
+    NAME            shift and go to state 32
+    CONSTANT        shift and go to state 33
+    NUMBER          shift and go to state 34
+
+    param                          shift and go to state 67
+
+state 54
+
+    (33) function_call -> LPAREN NAME function_params RPAREN .
+
+    LPAREN          reduce using rule 33 (function_call -> LPAREN NAME function_params RPAREN .)
+    $end            reduce using rule 33 (function_call -> LPAREN NAME function_params RPAREN .)
+    RPAREN          reduce using rule 33 (function_call -> LPAREN NAME function_params RPAREN .)
+
+
+state 55
+
+    (35) function_params -> function_params COMMA . param
+    (21) param -> . NAME
+    (22) param -> . CONSTANT
+    (23) param -> . NUMBER
+
+    NAME            shift and go to state 32
+    CONSTANT        shift and go to state 33
+    NUMBER          shift and go to state 34
+
+    param                          shift and go to state 68
+
+state 56
+
+    (46) facing -> LPAREN FACING . LPAREN COLON NAME RPAREN RPAREN
+
+    LPAREN          shift and go to state 69
+
+
+state 57
+
+    (47) blocked -> LPAREN BLOCKED . LPAREN RPAREN RPAREN
+
+    LPAREN          shift and go to state 70
+
+
+state 58
+
+    (48) can_put -> LPAREN CAN_PUT . COLON NAME param RPAREN
+
+    COLON           shift and go to state 71
+
+
+state 59
+
+    (49) can_pick -> LPAREN CAN_PICK . COLON NAME param RPAREN
+
+    COLON           shift and go to state 72
+
+
+state 60
+
+    (50) can_move -> LPAREN CAN_MOVE . COLON NAME RPAREN
+
+    COLON           shift and go to state 73
+
+
+state 61
+
+    (51) is_zero -> LPAREN IS_ZERO . COLON NAME RPAREN
+
+    COLON           shift and go to state 74
+
+
+state 62
+
+    (52) not_condition -> LPAREN NOT . condition RPAREN
+    (36) condition -> . facing
+    (37) condition -> . blocked
+    (38) condition -> . can_put
+    (39) condition -> . can_pick
+    (40) condition -> . can_move
+    (41) condition -> . is_zero
+    (42) condition -> . not_condition
+    (43) condition -> . NAME
+    (44) condition -> . CONSTANT
+    (45) condition -> . NUMBER
+    (46) facing -> . LPAREN FACING LPAREN COLON NAME RPAREN RPAREN
+    (47) blocked -> . LPAREN BLOCKED LPAREN RPAREN RPAREN
+    (48) can_put -> . LPAREN CAN_PUT COLON NAME param RPAREN
+    (49) can_pick -> . LPAREN CAN_PICK COLON NAME param RPAREN
+    (50) can_move -> . LPAREN CAN_MOVE COLON NAME RPAREN
+    (51) is_zero -> . LPAREN IS_ZERO COLON NAME RPAREN
+    (52) not_condition -> . LPAREN NOT condition RPAREN
+
+    NAME            shift and go to state 46
+    CONSTANT        shift and go to state 47
+    NUMBER          shift and go to state 48
+    LPAREN          shift and go to state 37
+
+    condition                      shift and go to state 75
+    facing                         shift and go to state 39
+    blocked                        shift and go to state 40
+    can_put                        shift and go to state 41
+    can_pick                       shift and go to state 42
+    can_move                       shift and go to state 43
+    is_zero                        shift and go to state 44
+    not_condition                  shift and go to state 45
+
+state 63
+
+    (29) conditional -> LPAREN IF condition instruction . instruction RPAREN
+    (3) instruction -> . command
+    (4) instruction -> . control_structure
+    (5) instruction -> . function_call
+    (6) command -> . LPAREN command_type params RPAREN
+    (24) control_structure -> . conditional
+    (25) control_structure -> . repeat
+    (26) control_structure -> . repeat_times
+    (27) control_structure -> . function_definition
+    (28) control_structure -> . command
+    (33) function_call -> . LPAREN NAME function_params RPAREN
+    (29) conditional -> . LPAREN IF condition instruction instruction RPAREN
+    (30) repeat -> . LPAREN LOOP condition instruction RPAREN
+    (31) repeat_times -> . LPAREN REPEAT param instruction RPAREN
+    (32) function_definition -> . LPAREN DEFUN NAME LPAREN params RPAREN instruction RPAREN
+
+    LPAREN          shift and go to state 6
+
+    instruction                    shift and go to state 76
+    command                        shift and go to state 3
+    control_structure              shift and go to state 4
+    function_call                  shift and go to state 5
+    conditional                    shift and go to state 7
+    repeat                         shift and go to state 8
+    repeat_times                   shift and go to state 9
+    function_definition            shift and go to state 10
+
+state 64
+
+    (30) repeat -> LPAREN LOOP condition instruction . RPAREN
+
+    RPAREN          shift and go to state 77
+
+
+state 65
+
+    (31) repeat_times -> LPAREN REPEAT param instruction . RPAREN
+
+    RPAREN          shift and go to state 78
+
+
+state 66
+
+    (32) function_definition -> LPAREN DEFUN NAME LPAREN . params RPAREN instruction RPAREN
+    (19) params -> . param
+    (20) params -> . params COMMA param
+    (21) param -> . NAME
+    (22) param -> . CONSTANT
+    (23) param -> . NUMBER
+
+    NAME            shift and go to state 32
+    CONSTANT        shift and go to state 33
+    NUMBER          shift and go to state 34
+
+    params                         shift and go to state 79
+    param                          shift and go to state 31
+
+state 67
+
+    (20) params -> params COMMA param .
+
+    RPAREN          reduce using rule 20 (params -> params COMMA param .)
+    COMMA           reduce using rule 20 (params -> params COMMA param .)
+
+
+state 68
+
+    (35) function_params -> function_params COMMA param .
+
+    RPAREN          reduce using rule 35 (function_params -> function_params COMMA param .)
+    COMMA           reduce using rule 35 (function_params -> function_params COMMA param .)
+
+
+state 69
+
+    (46) facing -> LPAREN FACING LPAREN . COLON NAME RPAREN RPAREN
+
+    COLON           shift and go to state 80
+
+
+state 70
+
+    (47) blocked -> LPAREN BLOCKED LPAREN . RPAREN RPAREN
+
+    RPAREN          shift and go to state 81
+
+
+state 71
+
+    (48) can_put -> LPAREN CAN_PUT COLON . NAME param RPAREN
+
+    NAME            shift and go to state 82
+
+
+state 72
+
+    (49) can_pick -> LPAREN CAN_PICK COLON . NAME param RPAREN
+
+    NAME            shift and go to state 83
+
+
+state 73
+
+    (50) can_move -> LPAREN CAN_MOVE COLON . NAME RPAREN
+
+    NAME            shift and go to state 84
+
+
+state 74
+
+    (51) is_zero -> LPAREN IS_ZERO COLON . NAME RPAREN
+
+    NAME            shift and go to state 85
+
+
+state 75
+
+    (52) not_condition -> LPAREN NOT condition . RPAREN
+
+    RPAREN          shift and go to state 86
+
+
+state 76
+
+    (29) conditional -> LPAREN IF condition instruction instruction . RPAREN
+
+    RPAREN          shift and go to state 87
+
+
+state 77
+
+    (30) repeat -> LPAREN LOOP condition instruction RPAREN .
+
+    LPAREN          reduce using rule 30 (repeat -> LPAREN LOOP condition instruction RPAREN .)
+    $end            reduce using rule 30 (repeat -> LPAREN LOOP condition instruction RPAREN .)
+    RPAREN          reduce using rule 30 (repeat -> LPAREN LOOP condition instruction RPAREN .)
+
+
+state 78
+
+    (31) repeat_times -> LPAREN REPEAT param instruction RPAREN .
+
+    LPAREN          reduce using rule 31 (repeat_times -> LPAREN REPEAT param instruction RPAREN .)
+    $end            reduce using rule 31 (repeat_times -> LPAREN REPEAT param instruction RPAREN .)
+    RPAREN          reduce using rule 31 (repeat_times -> LPAREN REPEAT param instruction RPAREN .)
+
+
+state 79
+
+    (32) function_definition -> LPAREN DEFUN NAME LPAREN params . RPAREN instruction RPAREN
+    (20) params -> params . COMMA param
+
+    RPAREN          shift and go to state 88
+    COMMA           shift and go to state 53
+
+
+state 80
+
+    (46) facing -> LPAREN FACING LPAREN COLON . NAME RPAREN RPAREN
+
+    NAME            shift and go to state 89
+
+
+state 81
+
+    (47) blocked -> LPAREN BLOCKED LPAREN RPAREN . RPAREN
+
+    RPAREN          shift and go to state 90
+
+
+state 82
+
+    (48) can_put -> LPAREN CAN_PUT COLON NAME . param RPAREN
+    (21) param -> . NAME
+    (22) param -> . CONSTANT
+    (23) param -> . NUMBER
+
+    NAME            shift and go to state 32
+    CONSTANT        shift and go to state 33
+    NUMBER          shift and go to state 34
+
+    param                          shift and go to state 91
+
+state 83
+
+    (49) can_pick -> LPAREN CAN_PICK COLON NAME . param RPAREN
+    (21) param -> . NAME
+    (22) param -> . CONSTANT
+    (23) param -> . NUMBER
+
+    NAME            shift and go to state 32
+    CONSTANT        shift and go to state 33
+    NUMBER          shift and go to state 34
+
+    param                          shift and go to state 92
+
+state 84
+
+    (50) can_move -> LPAREN CAN_MOVE COLON NAME . RPAREN
+
+    RPAREN          shift and go to state 93
+
+
+state 85
+
+    (51) is_zero -> LPAREN IS_ZERO COLON NAME . RPAREN
+
+    RPAREN          shift and go to state 94
+
+
+state 86
+
+    (52) not_condition -> LPAREN NOT condition RPAREN .
+
+    LPAREN          reduce using rule 52 (not_condition -> LPAREN NOT condition RPAREN .)
+    RPAREN          reduce using rule 52 (not_condition -> LPAREN NOT condition RPAREN .)
+
+
+state 87
+
+    (29) conditional -> LPAREN IF condition instruction instruction RPAREN .
+
+    LPAREN          reduce using rule 29 (conditional -> LPAREN IF condition instruction instruction RPAREN .)
+    $end            reduce using rule 29 (conditional -> LPAREN IF condition instruction instruction RPAREN .)
+    RPAREN          reduce using rule 29 (conditional -> LPAREN IF condition instruction instruction RPAREN .)
+
+
+state 88
+
+    (32) function_definition -> LPAREN DEFUN NAME LPAREN params RPAREN . instruction RPAREN
+    (3) instruction -> . command
+    (4) instruction -> . control_structure
+    (5) instruction -> . function_call
+    (6) command -> . LPAREN command_type params RPAREN
+    (24) control_structure -> . conditional
+    (25) control_structure -> . repeat
+    (26) control_structure -> . repeat_times
+    (27) control_structure -> . function_definition
+    (28) control_structure -> . command
+    (33) function_call -> . LPAREN NAME function_params RPAREN
+    (29) conditional -> . LPAREN IF condition instruction instruction RPAREN
+    (30) repeat -> . LPAREN LOOP condition instruction RPAREN
+    (31) repeat_times -> . LPAREN REPEAT param instruction RPAREN
+    (32) function_definition -> . LPAREN DEFUN NAME LPAREN params RPAREN instruction RPAREN
+
+    LPAREN          shift and go to state 6
+
+    instruction                    shift and go to state 95
+    command                        shift and go to state 3
+    control_structure              shift and go to state 4
+    function_call                  shift and go to state 5
+    conditional                    shift and go to state 7
+    repeat                         shift and go to state 8
+    repeat_times                   shift and go to state 9
+    function_definition            shift and go to state 10
+
+state 89
+
+    (46) facing -> LPAREN FACING LPAREN COLON NAME . RPAREN RPAREN
+
+    RPAREN          shift and go to state 96
+
+
+state 90
+
+    (47) blocked -> LPAREN BLOCKED LPAREN RPAREN RPAREN .
+
+    LPAREN          reduce using rule 47 (blocked -> LPAREN BLOCKED LPAREN RPAREN RPAREN .)
+    RPAREN          reduce using rule 47 (blocked -> LPAREN BLOCKED LPAREN RPAREN RPAREN .)
+
+
+state 91
+
+    (48) can_put -> LPAREN CAN_PUT COLON NAME param . RPAREN
+
+    RPAREN          shift and go to state 97
+
+
+state 92
+
+    (49) can_pick -> LPAREN CAN_PICK COLON NAME param . RPAREN
+
+    RPAREN          shift and go to state 98
+
+
+state 93
+
+    (50) can_move -> LPAREN CAN_MOVE COLON NAME RPAREN .
+
+    LPAREN          reduce using rule 50 (can_move -> LPAREN CAN_MOVE COLON NAME RPAREN .)
+    RPAREN          reduce using rule 50 (can_move -> LPAREN CAN_MOVE COLON NAME RPAREN .)
+
+
+state 94
+
+    (51) is_zero -> LPAREN IS_ZERO COLON NAME RPAREN .
+
+    LPAREN          reduce using rule 51 (is_zero -> LPAREN IS_ZERO COLON NAME RPAREN .)
+    RPAREN          reduce using rule 51 (is_zero -> LPAREN IS_ZERO COLON NAME RPAREN .)
+
+
+state 95
+
+    (32) function_definition -> LPAREN DEFUN NAME LPAREN params RPAREN instruction . RPAREN
+
+    RPAREN          shift and go to state 99
+
+
+state 96
+
+    (46) facing -> LPAREN FACING LPAREN COLON NAME RPAREN . RPAREN
+
+    RPAREN          shift and go to state 100
+
+
+state 97
+
+    (48) can_put -> LPAREN CAN_PUT COLON NAME param RPAREN .
+
+    LPAREN          reduce using rule 48 (can_put -> LPAREN CAN_PUT COLON NAME param RPAREN .)
+    RPAREN          reduce using rule 48 (can_put -> LPAREN CAN_PUT COLON NAME param RPAREN .)
+
+
+state 98
+
+    (49) can_pick -> LPAREN CAN_PICK COLON NAME param RPAREN .
+
+    LPAREN          reduce using rule 49 (can_pick -> LPAREN CAN_PICK COLON NAME param RPAREN .)
+    RPAREN          reduce using rule 49 (can_pick -> LPAREN CAN_PICK COLON NAME param RPAREN .)
+
+
+state 99
+
+    (32) function_definition -> LPAREN DEFUN NAME LPAREN params RPAREN instruction RPAREN .
+
+    LPAREN          reduce using rule 32 (function_definition -> LPAREN DEFUN NAME LPAREN params RPAREN instruction RPAREN .)
+    $end            reduce using rule 32 (function_definition -> LPAREN DEFUN NAME LPAREN params RPAREN instruction RPAREN .)
+    RPAREN          reduce using rule 32 (function_definition -> LPAREN DEFUN NAME LPAREN params RPAREN instruction RPAREN .)
+
+
+state 100
+
+    (46) facing -> LPAREN FACING LPAREN COLON NAME RPAREN RPAREN .
+
+    LPAREN          reduce using rule 46 (facing -> LPAREN FACING LPAREN COLON NAME RPAREN RPAREN .)
+    RPAREN          reduce using rule 46 (facing -> LPAREN FACING LPAREN COLON NAME RPAREN RPAREN .)
+
+WARNING: 
+WARNING: Conflicts:
+WARNING: 
+WARNING: reduce/reduce conflict in state 3 resolved using rule (instruction -> command)
+WARNING: rejected rule (control_structure -> command) in state 3
+WARNING: Rule (control_structure -> command) is never reduced
