@@ -31,4 +31,4 @@
 (pick :balloons balloonsHere)
 )
 
-(run -dirs:left :up :left :down :right)
+(run -dirs:left :front :left :back :right)
