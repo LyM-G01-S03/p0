@@ -178,15 +178,19 @@ def check_syntax(tokens):
         return False
     return True
 
-def main():
-    archivo = cf.data_dir + 'ejemplo_valido.txt'
-    with open(archivo, "r") as f:
-        text = f.read()
-    tokens = tokenize(text)
-    if check_syntax(tokens) == True:
-        print("yes")
-    else:
-        print("no")
+def iniciar(lista):
+    return main(lista)
 
-if __name__ == "__main__":
-    main()
+def main(lista):
+    bandera = True
+    for linea in lista:
+        tokenlinea = tokenize(linea)
+        if check_syntax(tokenlinea)is False:
+            bandera = False
+            print('linea no funcioa')
+            break
+        print('linea funciona')
+    if bandera == True:
+        return True
+    else:
+        return False

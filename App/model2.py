@@ -1,9 +1,4 @@
-"""
-El modelo se encarga de la creacion de funciones y manejo de 
-logica del programa
-"""
-
-variables={}
+variables = {}
 funciones = {}
 
 def separar_por_parentesis(texto: str) -> list:
@@ -11,23 +6,16 @@ def separar_por_parentesis(texto: str) -> list:
     nivel_parentesis = 0
     inicio_subcadena = 0
 
-    # Itera sobre cada carácter en el texto
     for i, char in enumerate(texto):
         
         if char == '(':
-            # Si encontramos un paréntesis de apertura, incrementamos el nivel de paréntesis
             nivel_parentesis += 1
-            # Si es el primer paréntesis de apertura, guardamos su posición como inicio de subcadena
             if nivel_parentesis == 1:
                 inicio_subcadena = i
         elif char == ')':
-            # Si encontramos un paréntesis de cierre, decrementamos el nivel de paréntesis
             nivel_parentesis -= 1
-            # Si el nivel de paréntesis vuelve a 0, significa que hemos encontrado el cierre de una subcadena
             if nivel_parentesis == 0:
-                # Guardamos la subcadena encontrada
                 subcadenas.append(texto[inicio_subcadena:i+1])
-                # Actualizamos el inicio de la próxima subcadena
                 inicio_subcadena = i + 1
     return subcadenas
 
@@ -48,7 +36,8 @@ def parentesis_organizados(cadena):
     return subcadenas
 
 def verificar(subcadenas:list)->bool:
-    guardarvarfun(subcadenas)
+    print(variables, funciones)
+    return guardarvarfun(subcadenas)
 
 def guardarvarfun(subcadenas):
     lista_numeros = ['0','1','2','3','4','5','6','7','8','9']
@@ -65,6 +54,7 @@ def guardarvarfun(subcadenas):
                             posicion = cadena[7:-1].find(constante)
                             n = constante
                 name = cadena[7:posicion]
+                print(name)
             variables[name] = n
         if '(defun' in cadena:
             sec_com = []
@@ -79,7 +69,4 @@ def guardarvarfun(subcadenas):
                     for comando in secuencia[1:]:
                         sec_com.append(comando)
             funciones[name] = {'params': params, 'coms': sec_com}
-
-
-    
-    
+    return True
