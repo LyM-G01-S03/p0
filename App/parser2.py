@@ -126,7 +126,7 @@ def funciones_arreglar(tokens):
                     parametros.append(token.value)
                 return  True, name, parametros 
                 
-def is_valid_condition(condition, tokens):
+def is_valid_condition(condition):
     lista_dir = [":north", ":south", ":west", ":east"]
     lista_c_p = ["chips", "balloons"]
     
@@ -257,6 +257,7 @@ def is_valid_comand(command):
     lista_move_dir2 = [ "front", "right", "left", "back"]
     
     if "defvar" in command:
+        
         info = []
         cadena_info = command[6:]
         for caracter in cadena_info:
@@ -349,16 +350,6 @@ def is_valid_comand(command):
         else:
             return False
         
-    elif "face" in command:
-        parts = command.split("face")
-        for element in parts:
-            if element == "":
-                parts.remove(element)
-        if parts[0] in lista_dir:
-            return True
-        else:
-            return False
-        
     elif "put" in command:
         info = []
         cadena_info = command[3:]
@@ -375,8 +366,8 @@ def is_valid_comand(command):
                                 n = cadena_info[posicion:]
                                 if n!=None:
                                     name = cadena_info[:posicion]
-                                info = [name, n] 
-                             
+                                info = [name, n]
+                            
         if info[0] in lista_c_p and (info[1].isdigit() or info[1] in defined_variables):
            return True
         else:
@@ -434,9 +425,20 @@ def is_valid_comand(command):
         if ( info[0] in defined_variables or info[0].isdigit() ) and info[1] in lista_dir:
                 return True
         else:
-               return True
+               return False
+    
+    elif "face" in command:
+        parts = command.split("face")
+        for element in parts:
+            if element == "":
+                parts.remove(element)
+        if parts[0] in lista_dir:
+            return True
+        else:
+            return False
         
     elif "move" in command:
+        
         parts = command.split("move")
         for element in parts:
             if element == "":
@@ -454,16 +456,18 @@ def verificar_if_loop(tokens):
     verificados_command = []
     for token in tokens:
         if token.type == CONDITION:
-            if is_valid_condition(token.value, tokens) == True:
+            if is_valid_condition(token.value) == True:
                 verificados_condition.append(True)
             else:
                 verificados_condition.append(False)
+                
         if token.type == COMAND:
             if is_valid_comand(token.value) == True:
                  verificados_command.append(True)
             else:
-                verificados_command.append(True)
-                
+                verificados_command.append(False)
+    
+     
     if False in verificados_condition or False in verificados_command:
         return False
     else:
@@ -492,13 +496,13 @@ def check_syntax(tokens):
                 continue
             if "if" in token.value or "loop" in token.value:
                 verificados.append(verificar_if_loop(tokens))
-            
+                
         if token.type == STRING:
             ver, name, par = funciones_arreglar(tokens)
             if ver is True:
                 ver2 = is_valid_function_call(name, par)
                 verificados.append(ver2)
-    print(verificados)       
+          
     if False in verificados:
         return False
     else:
@@ -522,4 +526,4 @@ def main(lista):
     if bandera == True:
         return True
     else:
-        return True
+        return False
