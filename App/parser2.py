@@ -597,8 +597,6 @@ def check_syntax(tokens):
     else:
         return True
                 
-
-
 def iniciar(lista):
     return main(lista)
 
