@@ -182,6 +182,20 @@ def parentesis_organizados(cadena):
                 inicio_subcadena = i + 1
     return subcadenas
 
+def verificar_condicion_if(tokens):
+    verificados = []
+    for token in tokens:
+        if token.type == CONDITION:
+            if is_valid_condition(token.value, tokens) == True:
+                verificados.append(True)
+            else:
+                verificados.append(False)
+    if False in verificados:
+        return False
+    else:
+        return True
+                
+
 def parentesis_organizados(cadena):
     subcadenas = []
     nivel_parentesis = 0
@@ -214,7 +228,7 @@ def save_functions_variables(tokens):
                         params.append(parametro)
                     count = count +1
     for token in tokens:
-        if token.type == KEYWORD or COMMAND:
+        if token.type == KEYWORD or COMAND:
             if 'defvar' in token.value:
                 cadena_info = token.value[6:]
                 for caracter in cadena_info:
@@ -245,7 +259,7 @@ def check_syntax(tokens):
             continue
         if token.type == KEYWORD:
             if "defvar" or 'defun' in token.value:
-                save_funcionts_variables(tokens)
+                save_functions_variables(tokens)
                 continue
             elif token.value == "defun":
                 if len(current_block) > 0:
