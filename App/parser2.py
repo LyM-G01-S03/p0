@@ -260,7 +260,7 @@ def save_functions_variables(tokens):
                 nombre = token.value[5:]
                 defined_functions[nombre] = params
    
-def is_valid_comand(command):
+def is_valid_comand(command, params = None):
     lista_dir = [":north", ":south", ":east", ":west"]
     lista_move = [":left", ":right", ":around"]
     lista_constantes = ['Dim', 'myXpos', 'myYpos', 'myChips', 'myBaloons', 'ballonsHere', 'ChipsHere', 'Spaces']
@@ -371,11 +371,24 @@ def is_valid_comand(command):
                                 if n!=None:
                                     name = cadena_info[:posicion]
                                 info = [name, n] 
-                             
-        if info[0] in lista_c_p and (info[1].isdigit() or info[1] in defined_variables):
-           return True
+        for param in params:
+                            if param in cadena_info:
+                                posicion = cadena_info.find(param)
+                                n = cadena_info[posicion:]
+                                if n!=None:
+                                    name = cadena_info[:posicion]
+                                info = [name, n] 
+        
+        if params == None:
+            if info[0] in lista_c_p and (info[1].isdigit() or info[1] in defined_variables):
+                return True
+            else:
+                return False  
         else:
-            return False  
+            if info[0] in lista_c_p and (info[1].isdigit() or info[1] in defined_variables or info[1]in params):
+                return True
+            else:
+                return False  
         
     if "pick" in command:
         info = []
@@ -476,8 +489,37 @@ def verificar_if_loop(tokens):
     else:
         return True
     
-def verificar_repeat_times():
-    pass
+def verificar_repeat_times(tokens):
+    lista_constantes = ['Dim', 'myXpos', 'myYpos', 'myChips', 'myBaloons', 'ballonsHere', 'ChipsHere', 'Spaces']
+    for token in tokens:
+        if token.type == 'KEYWORD':
+            if 'repeat' in token.value:
+                variable = token.value[6:]
+                if is_valid_variable(variable) or variable in lista_constantes:
+                    return True
+                elif int(variable)>0:
+                    return True
+                else:
+                    return False
+
+def verificar_defun(tokens):
+    params = []
+    verificados = []
+    for token1 in tokens:
+        if (token1.type == KEYWORD) :
+            if ('defun' in token1.value):
+                count = 1
+                while count < len(tokens):
+                    if tokens[count].type == STRING:
+                        parametro = tokens[count].value
+                        params.append(parametro)
+                    count = count +1
+    for token in (tokens):
+        if token.type == 'COMAND':
+            verificados.append(is_valid_comand(token.value, params))
+                
+                
+                    
     
             
 def check_syntax(tokens):
@@ -541,7 +583,7 @@ def iniciar(lista):
 def main(lista):
     bandera = True
     #for linea in lista:
-    linea = '(defunfill()(repeatSpaces(if(not(isZero?myChips))(put:chips1)(null))))'
+    linea = '(defunfoo(c,p)(put:chipsc)(put:balloonsp)(moverotate))'
     tokenlinea = tokenize(linea)
     print(tokenlinea)
     if check_syntax(tokenlinea)is False:

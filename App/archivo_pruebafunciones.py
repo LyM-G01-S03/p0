@@ -32,8 +32,8 @@ def funciones_arreglar(tokens):
                 
 
 
-tokens = [('SEPARATOR','('), ('STRING', 'foo1')]
-print(funciones_arreglar(tokens))
+
+#print(funciones_arreglar(tokens))
 
 def is_valid_param(parametro):
     if (parametro in defined_variables) or parametro.isdigit():
@@ -48,4 +48,32 @@ def is_valid_function_call(name, params=None):
     return (len(expected_params) == len(params)) and all(is_valid_param(p) for p in params)
 
 
-print(is_valid_function_call('foo', ['1','3']))
+def is_valid_variable(name):
+    if (name in defined_variables):
+        return True
+    else:
+        return False
+
+
+def verificar_repeat_times(tokens):
+    for token in tokens:
+        if token[0] == 'KEYWORD':
+            if 'repeat' in token[1]:
+                variable = token[1][6:]
+                if is_valid_variable(variable) or variable in lista_constantes:
+                    return True
+                elif int(variable)>0:
+                    return True
+                else:
+                    return False
+#print(is_valid_function_call('foo', ['1','3']))
+
+tokens = [('SEPARATOR', '('), ('KEYWORD', 'defunfill'), ('SEPARATOR', '('), ('SEPARATOR', ')'), 
+          ('SEPARATOR', '('), ('KEYWORD', 'repeatSpaces'), ('SEPARATOR', '('), ('KEYWORD', 'if'),
+          ('SEPARATOR', '('), ('CONDITION', 'not'), ('SEPARATOR', '('), ('CONDITION', 'isZero?myChips'), 
+          ('SEPARATOR', ')'), ('SEPARATOR', ')'), ('SEPARATOR', '('), ('COMAND', 'put:chips1'), 
+          ('SEPARATOR', ')'), ('SEPARATOR', '('), ('COMAND', 'null'), ('SEPARATOR', ')'), 
+          ('SEPARATOR', ')'), ('SEPARATOR', ')'), ('SEPARATOR', ')')]
+
+
+print(verificar_repeat_times(tokens))
