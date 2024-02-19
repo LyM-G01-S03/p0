@@ -168,7 +168,24 @@ def is_valid_condition(condition):
                         if len(info) < 2:
                             info.append(name)
                             info.append(n)
-        if info[0] in lista_c_p and info[1].isdigit():
+                            
+        for constante in lista_constantes:
+                            if constante in cadena_info:
+                                posicion = cadena_info.find(constante)
+                                n = cadena_info[posicion:]
+                                if n!=None:
+                                    name = cadena_info[:posicion]
+                                info = [name, n] 
+                                
+        for constante in defined_variables:
+                            if constante in cadena_info:
+                                posicion = cadena_info.find(constante)
+                                n = cadena_info[posicion:]
+                                if n!=None:
+                                    name = cadena_info[:posicion]
+                                info = [name, n]
+                                
+        if info[0] in lista_c_p and info[1].isdigit() or (info[1] in lista_constantes) or info[1] in defined_variables:
             return True
         else:
             return False
@@ -184,10 +201,27 @@ def is_valid_condition(condition):
                         if len(info) < 2:
                             info.append(name)
                             info.append(n)
-        if info[0] in lista_c_p and info[1].isdigit():
+                            
+        for constante in lista_constantes:
+                            if constante in cadena_info:
+                                posicion = cadena_info.find(constante)
+                                n = cadena_info[posicion:]
+                                if n!=None:
+                                    name = cadena_info[:posicion]
+                                info = [name, n] 
+                                
+        for constante in defined_variables:
+                            if constante in cadena_info:
+                                posicion = cadena_info.find(constante)
+                                n = cadena_info[posicion:]
+                                if n!=None:
+                                    name = cadena_info[:posicion]
+                                info = [name, n]
+                                
+        if info[0] in lista_c_p and info[1].isdigit() or (info[1] in lista_constantes) or info[1] in defined_variables:
             return True
         else:
-            return False
+            return False      
         
     if "can-move?" in condition:
         parts = condition.split("can-move?")
@@ -205,7 +239,7 @@ def is_valid_condition(condition):
             if element == "":
                 parts.remove(element)
         
-        if parts[0].isdigit() or parts[0] in lista_constantes :
+        if parts[0].isdigit() or parts[0] in lista_constantes or parts[0] in defined_variables:
             return True
         else:
             return False
@@ -338,7 +372,20 @@ def is_valid_comand(command):
                                 if n!=None:
                                     name = cadena_info[:posicion]
                                 info = [name, n] 
-                                
+        
+        lista_nueva = []
+        for defined_f in defined_functions.values():
+            for param in defined_f:
+                lista_nueva.append(param)   
+        
+        for constante in lista_nueva:
+                            if constante in cadena_info:
+                                posicion = cadena_info.find(constante)
+                                n = cadena_info[posicion:]
+                                if n!=None:
+                                    name = cadena_info[:posicion]
+                                info = [name, n] 
+                                        
         if info[0]  in defined_variables:
             defined_variables[info[0]] = info[1]
             return True
@@ -350,7 +397,13 @@ def is_valid_comand(command):
         for element in parts:
             if element == "":
                 parts.remove(element)
-        if parts[0] in lista_constantes or parts[0] in defined_variables or parts[0].isdigit():
+                
+        lista_nueva = []
+        for defined_f in defined_functions.values():
+            for param in defined_f:
+                lista_nueva.append(param)
+                
+        if parts[0] in lista_constantes or parts[0] in defined_variables or parts[0].isdigit() or parts[0] in lista_nueva:
             return True
         else:
             return False
@@ -383,7 +436,15 @@ def is_valid_comand(command):
                                     name = cadena_info[:posicion]
                                 info = [name, n] 
                       
-        
+        for constante in lista_constantes:
+                            if constante in cadena_info:
+                                
+                                posicion = cadena_info.find(constante)
+                                n = cadena_info[posicion:]
+                                if n!=None:
+                                    name = cadena_info[:posicion]
+                                info = [name, n] 
+                                
         for element in lista_c_p:
                                 if element in cadena_info:
                                     cadena_par = cadena_info[len(element):]
@@ -395,14 +456,11 @@ def is_valid_comand(command):
         for defined_f in defined_functions.values():
             for param in defined_f:
                 lista_nueva.append(param)
-        if info[0] in lista_c_p and (info[1].isdigit() or info[1] in defined_variables or info[1]in lista_nueva):
+        if info[0] in lista_c_p and (info[1].isdigit() or info[1] in defined_variables or info[1] in lista_nueva or info[1] in lista_constantes):
                 return True
         else:
                return False
-     
-       
-            
-        
+           
     elif "pick" in command:
         info = []
         cadena_info = command[4:]
@@ -420,8 +478,8 @@ def is_valid_comand(command):
                                 if n!=None:
                                     name = cadena_info[:posicion]
                                 info = [name, n] 
+                                
         for constante in lista_constantes:
-                            
                             if constante in cadena_info:
                                 
                                 posicion = cadena_info.find(constante)
@@ -431,7 +489,19 @@ def is_valid_comand(command):
                                 info = [name, n] 
                                 
                
-        if info[0] in lista_c_p and (info[1].isdigit() or info[1] in defined_variables or info[1] in lista_constantes):
+        for element in lista_c_p:
+                                if element in cadena_info:
+                                    cadena_par = cadena_info[len(element):]
+  
+                                    info = [element, cadena_par] 
+        
+       
+        lista_nueva = []
+        for defined_f in defined_functions.values():
+            for param in defined_f:
+                lista_nueva.append(param)
+                
+        if info[0] in lista_c_p and (info[1].isdigit() or info[1] in defined_variables or info[1] in lista_nueva or info[1] in lista_constantes):
            return True
         else:
             return False
@@ -445,8 +515,14 @@ def is_valid_comand(command):
                                     n = cadena_info[posicion:]
                                     if n!=None:
                                         name = cadena_info[:posicion]
-                                    info = [name, n] 
-        if ( info[0] in defined_variables or info[0].isdigit() ) and info[1] in lista_move_dir:
+                                    info = [name, n]
+                                    
+        lista_nueva = []
+        for defined_f in defined_functions.values():
+            for param in defined_f: 
+                lista_nueva.append(param)
+                
+        if ( info[0] in defined_variables or info[0].isdigit() or info[0] in lista_nueva) and info[1] in lista_move_dir:
                 return True
         else:
                return False
@@ -462,7 +538,13 @@ def is_valid_comand(command):
                                     if n!=None:
                                         name = cadena_info[:posicion]
                                     info = [name, n] 
-        if ( info[0] in defined_variables or info[0].isdigit() ) and info[1] in lista_dir:
+                                    
+        lista_nueva = []
+        for defined_f in defined_functions.values():
+            for param in defined_f:
+                lista_nueva.append(param)
+                
+        if ( info[0] in defined_variables or info[0].isdigit() or info[0] in lista_nueva) and info[1] in lista_dir:
                 return True
         else:
                return False
@@ -483,7 +565,13 @@ def is_valid_comand(command):
         for element in parts:
             if element == "":
                 parts.remove(element)
-        if parts[0] in lista_constantes or parts[0] in defined_variables or parts[0].isdigit():
+                
+        lista_nueva = []
+        for defined_f in defined_functions.values():
+            for param in defined_f:
+                lista_nueva.append(param)
+                
+        if parts[0] in lista_constantes or parts[0] in defined_variables or parts[0].isdigit() or parts[0] in lista_nueva:
             return True
         else:
             return False
@@ -597,6 +685,8 @@ def check_syntax(tokens):
     else:
         return True
                 
+
+
 def iniciar(lista):
     return main(lista)
 
@@ -604,10 +694,10 @@ def main(lista):
     bandera = True
     for linea in lista:
         tokenlinea = tokenize(linea)
-        
+       
         if check_syntax(tokenlinea)is False:
             bandera = False
-            
+         
             break
        
     if bandera == True:

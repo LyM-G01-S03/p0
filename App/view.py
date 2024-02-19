@@ -8,8 +8,7 @@ import sys
 import controllerparser
 
 def menu():
-    #nombre_archivo = str(input("Introduzca el nombre del archivo a verificar: "))
-    nombre_archivo = "ejemplo_valido.txt"
+    nombre_archivo = str(input("Introduzca el nombre del archivo a verificar: "))
     return nombre_archivo
     
 def leer_archivo(nombre):
