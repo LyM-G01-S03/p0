@@ -237,7 +237,6 @@ def save_functions_variables(tokens):
                         n = cadena_info[posicion:]
                         name = cadena_info[:posicion]
                         defined_variables[name]=n
-                        print(name, n)
                         break
                 for constante in lista_constantes:
                     if constante in cadena_info:
@@ -250,7 +249,6 @@ def save_functions_variables(tokens):
                 nombre = token.value[5:]
                 defined_functions[nombre] = params
     print(defined_functions) 
-    print(defined_variables)       
             
 def check_syntax(tokens):
     current_block = []
@@ -308,8 +306,9 @@ def iniciar(lista):
 def main(lista):
     bandera = True
     #for linea in lista:
-    linea = "(defvarrotate300)"
+    linea = '(defunfoo(c,p)(put:chipsc)(put:balloonsp)(moverotate))'
     tokenlinea = tokenize(linea)
+    print(tokenlinea)
     if check_syntax(tokenlinea)is False:
             bandera = False
 
