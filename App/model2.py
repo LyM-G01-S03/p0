@@ -1,5 +1,5 @@
-variables = {}
-funciones = {}
+defined_variables = {}
+defined_functions = {}
 
 def separar_por_parentesis(texto: str) -> list:
     subcadenas = []
@@ -36,37 +36,47 @@ def parentesis_organizados(cadena):
     return subcadenas
 
 def verificar(subcadenas:list)->bool:
-    print(variables, funciones)
     return guardarvarfun(subcadenas)
 
 def guardarvarfun(subcadenas):
-    lista_numeros = ['0','1','2','3','4','5','6','7','8','9']
     lista_constantes = ['Dim', 'myXpos', 'myYpos', 'myChips', 'myBaloons', 'ballonsHere', 'ChipsHere', 'Spaces']
     for cadena in subcadenas:
-        if '(defvar' in cadena:
-            for caracter in cadena[7:-1]:
-                if caracter in lista_numeros:
-                    posicion = cadena[7:-1].find(caracter)
-                    n = cadena[posicion:-1]
-                else:    
-                    for constante in lista_constantes:
-                        if constante in cadena[7:-1]:
-                            posicion = cadena[7:-1].find(constante)
-                            n = constante
-                name = cadena[7:posicion]
-                print(name)
-            variables[name] = n
-        if '(defun' in cadena:
+        if 'defvar' in cadena:
+            cadena_info = cadena[7:-1]
+            for caracter in cadena_info:
+                if caracter.isdigit():
+                    posicion = cadena_info.find(caracter)
+                    n = cadena_info[posicion:]
+                    name = cadena_info[:posicion]
+                    defined_variables[name] = n
+                    if n == None:
+                        return False
+            for constante in lista_constantes:
+                if constante in cadena_info:
+                    posicion = cadena_info.find(constante)
+                    n = cadena_info[posicion:]
+                    name = cadena_info[:posicion]
+                    defined_variables[name] = n
+                    if n == None:
+                        return False
+                        
+        if 'defun' in cadena:
+            cadena_info = cadena[6:-1]
             sec_com = []
             params = []
-            name = cadena[6:posicion1]
-            for parentesis in cadena[6:-1]:
-                if parentesis =='(' :
-                    posicion1 = cadena[6:-1].find(parentesis)
-                    secuencia = parentesis_organizados(cadena[parentesis:-1])
-                    parametros = secuencia[0]
-                    params = parametros.split(" ")
-                    for comando in secuencia[1:]:
-                        sec_com.append(comando)
-            funciones[name] = {'params': params, 'coms': sec_com}
+            posicion1 = cadena_info.find('(')
+            name = cadena_info[:posicion1]
+            secuencia = parentesis_organizados(cadena[posicion1:-1])  
+            parametros = secuencia[0]
+            params = parametros.split(",")
+            params = [cadena.replace('(', '').replace(')', '').replace('()', '') for cadena in params]
+            for comando in secuencia[1:]:
+                sec_com.append(comando)
+            defined_functions[name] = {'params': params, 'coms': sec_com}
     return True
+
+verificar(['(defvarrotate300)', '(if(can-move?:north)(move-face1:north)(null))', 
+           '((if(not(blocked?))(move1)(null))(turn:left))', '(defvarone1)', '(defunfoo(c,p)(put:chipsc)(put:balloonsp)(moverotate))', '(foo13)', 
+           '(defungoend()(if(not(blocked?))((moveone)(goend))(null)))', '(defunfill()(repeatSpaces(if(not(isZero?myChips))(put:chips1)(null))))', 
+           '(defunpickAllB()(pick:balloonsballoonsHere))', '(run-dirs:left:front:left:back:right)'])
+print(defined_functions)

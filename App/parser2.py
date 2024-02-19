@@ -46,8 +46,6 @@ def keywords_verification(current_token: str) -> str:
             return KEYWORD
     return STRING
 
-defined_functions = {}
-
 # Define function to tokenize input
 def tokenize(text):
     tokens = []
@@ -72,14 +70,16 @@ def tokenize(text):
             current_token += char
     if current_token:
         tokens.append(Token(keywords_verification(current_token), current_token))
-    print(tokens)
     return tokens
 
 
 
 # Define functions to check syntax and consistency
 def is_valid_variable(name):
-    return name.isalpha() and not name in KEYWORDS
+    if name in defined_variables:
+        return True
+    else:
+        return False
 
 def is_valid_function_call(name, params):
     if name not in defined_functions:
@@ -102,41 +102,69 @@ def is_valid_condition(condition):
             return len(condition) == 2 and is_valid_condition(condition[1])
     return False
 
+def parentesis_organizados(cadena):
+    subcadenas = []
+    nivel_parentesis = 0
+    inicio_subcadena = 0
+    for i, char in enumerate(cadena):
+        if char == '(':
+            nivel_parentesis += 1
+            if nivel_parentesis == 1:
+                inicio_subcadena = i
+        elif char == ')':
+            nivel_parentesis -= 1
+            if nivel_parentesis == 0:
+                subcadenas.append(cadena[inicio_subcadena:i+1])
+                inicio_subcadena = i + 1
+    return subcadenas
+
 defined_variables = {}
 defined_functions = {}
     
 def save_funcionts_variables(tokens):
     lista_constantes = ['Dim', 'myXpos', 'myYpos', 'myChips', 'myBaloons', 'ballonsHere', 'ChipsHere', 'Spaces']
+    params = []
+    for token1 in tokens:
+        if (token1.type == KEYWORD) :
+            if ('defun' in token1.value):
+                count = 1
+                while count < len(tokens):
+                    if tokens[count].type == STRING:
+                        parametro = tokens[count].value
+                        params.append(parametro)
+                    count = count +1
     for token in tokens:
-        if token.type == KEYWORD:
-            if "defvar" in token.value:
-                for caracter in token.value[7:-1]:
+        if token.type == KEYWORD or COMMAND:
+            if 'defvar' in token.value:
+                cadena_info = token.value[6:]
+                for caracter in cadena_info:
                     if caracter.isdigit():
-                        posicion = token.value[7:-1].find(caracter)
-                        n = token.value[posicion:-1]
-                    else:    
-                        for constante in lista_constantes:
-                            if constante in token.value[7:-1]:
-                                posicion = token.value[7:-1].find(constante)
-                                n = constante
-                    name = token.value[7:posicion]
-            defined_variables[name] = n
+                        posicion = cadena_info.find(caracter)
+                        n = cadena_info[posicion:]
+                        name = cadena_info[:posicion]
+                        defined_variables[name]=n
+                        break
+                for constante in lista_constantes:
+                    if constante in cadena_info:
+                        posicion = cadena_info.find(constante)
+                        n = cadena_info[posicion:]
+                        if n!=None:
+                            name = cadena_info[:posicion]
+                            defined_variables[name] = n     
+            if 'defun' in token.value:
+                nombre = token.value[5:]
+                defined_functions[nombre] = params
+    print(defined_functions) 
+    print(defined_variables)       
             
 def check_syntax(tokens):
     current_block = []
     for token in tokens:
-        print(current_block)
         if token.type == SEPARATOR:
             continue
         if token.type == KEYWORD:
-            if "defvar" in token.value:
-                if len(current_block) > 0:
-                    return False  # Defvar should be at the beginning of a block
-                next_token = next(iter(tokens))
-                if not is_valid_variable(next_token.value):
-                    return False
-                defined_variables.add(next_token.value)
-             
+            if "defvar" or 'defun' in token.value:
+                save_funcionts_variables(tokens)
                 continue
             elif token.value == "defun":
                 if len(current_block) > 0:
@@ -183,13 +211,15 @@ def iniciar(lista):
 
 def main(lista):
     bandera = True
-    for linea in lista:
-        tokenlinea = tokenize(linea)
-        if check_syntax(tokenlinea)is False:
+    #for linea in lista:
+    linea = '(defvarrotate300)'
+    tokenlinea = tokenize(linea)
+    print(tokenlinea)
+    if check_syntax(tokenlinea)is False:
             bandera = False
-            print('linea no funcioa')
-            break
-        print('linea funciona')
+
+            #break
+
     if bandera == True:
         return True
     else:

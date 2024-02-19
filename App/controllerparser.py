@@ -70,7 +70,6 @@ def load_data(nombre):
     contenido = ''.join(linea.replace(' ', '').strip() for linea in lista_mod)
      
     lista_org = separar_por_parentesis(contenido)
-    print(lista_org)
     if len(lista_org) == 0:
         return False
     resultado = parser2.iniciar(lista_org)
