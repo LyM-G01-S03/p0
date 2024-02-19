@@ -95,16 +95,26 @@ def is_valid_variable(name):
         return False
     
 def is_valid_param(parametro):
-    if (parametro in defined_variables) or parametro.isdigit():
+   
+    lista_nueva = []
+    for defined_f in defined_functions.values():
+            for param in defined_f:
+                lista_nueva.append(param)
+    if (parametro in lista_nueva) or parametro.isdigit() or (parametro in defined_variables):
         return True
     else:
         return False
 
 def is_valid_function_call(name, params=None):
     if name not in defined_functions:
+    
         return False
-    expected_params = defined_functions[name]["params"]
-    return (len(expected_params) == len(params)) and all(is_valid_param(p) for p in params)
+    expected_params = defined_functions[name]
+   
+    if params == None:
+        return  True
+    else:
+        return (len(expected_params) == len(params)) and all(is_valid_param(p) for p in params)
 
 def funciones_arreglar(tokens):
     parametros = []
@@ -122,13 +132,17 @@ def funciones_arreglar(tokens):
                     else:
                         parametro = token.value[len(funcion):]
                         parametros.append(parametro)
-                if (funcion not in token.value) and (name == funcion)  and ((len(parametros) > 0) or (len(parametros) is not None)):
+               
+                if (funcion not in token.value)   and ((len(parametros) > 0) or (len(parametros) is not None)):
+                   
                     parametros.append(token.value)
-                return  True, name, parametros 
+                
+    return  True, name, parametros 
                 
 def is_valid_condition(condition):
     lista_dir = [":north", ":south", ":west", ":east"]
     lista_c_p = ["chips", "balloons"]
+    lista_constantes = ['Dim', 'myXpos', 'myYpos', 'myChips', 'myBalloons', 'balloonsHere', 'ChipsHere', 'Spaces']
     
     if "facing?" in condition:
         parts = condition.split("facing?")
@@ -190,7 +204,8 @@ def is_valid_condition(condition):
         for element in parts:
             if element == "":
                 parts.remove(element)
-        if parts[0].isdigit():
+        
+        if parts[0].isdigit() or parts[0] in lista_constantes :
             return True
         else:
             return False
@@ -248,11 +263,11 @@ def save_functions_variables(tokens):
                 nombre = token.value[5:]
                 defined_functions[nombre] = params
    
-def is_valid_comand(command, params = None):
+def is_valid_comand(command):
     lista_dir = [":north", ":south", ":east", ":west"]
     lista_move = [":left", ":right", ":around"]
-    lista_constantes = ['Dim', 'myXpos', 'myYpos', 'myChips', 'myBaloons', 'ballonsHere', 'ChipsHere', 'Spaces']
-    lista_c_p = ["chips", "balloons"]
+    lista_constantes = ['Dim', 'myXpos', 'myYpos', 'myChips', 'myBalloons', 'balloonsHere', 'ChipsHere', 'Spaces']
+    lista_c_p = [":chips", ":balloons"]
     lista_move_dir = [ ":front", ":right", ":left", ":back"]
     lista_move_dir2 = [ "front", "right", "left", "back"]
     
@@ -367,24 +382,26 @@ def is_valid_comand(command, params = None):
                                 if n!=None:
                                     name = cadena_info[:posicion]
                                 info = [name, n] 
-        for param in params:
-                            if param in cadena_info:
-                                posicion = cadena_info.find(param)
-                                n = cadena_info[posicion:]
-                                if n!=None:
-                                    name = cadena_info[:posicion]
-                                info = [name, n] 
+                      
         
-        if params == None:
-            if info[0] in lista_c_p and (info[1].isdigit() or info[1] in defined_variables):
+        for element in lista_c_p:
+                                if element in cadena_info:
+                                    cadena_par = cadena_info[len(element):]
+  
+                                    info = [element, cadena_par] 
+        
+       
+        lista_nueva = []
+        for defined_f in defined_functions.values():
+            for param in defined_f:
+                lista_nueva.append(param)
+        if info[0] in lista_c_p and (info[1].isdigit() or info[1] in defined_variables or info[1]in lista_nueva):
                 return True
-            else:
-                return False  
         else:
-            if info[0] in lista_c_p and (info[1].isdigit() or info[1] in defined_variables or info[1]in params):
-                return True
-            else:
-                return False  
+               return False
+     
+       
+            
         
     elif "pick" in command:
         info = []
@@ -403,8 +420,18 @@ def is_valid_comand(command, params = None):
                                 if n!=None:
                                     name = cadena_info[:posicion]
                                 info = [name, n] 
-                             
-        if info[0] in lista_c_p and (info[1].isdigit() or info[1] in defined_variables):
+        for constante in lista_constantes:
+                            
+                            if constante in cadena_info:
+                                
+                                posicion = cadena_info.find(constante)
+                                n = cadena_info[posicion:]
+                                if n!=None:
+                                    name = cadena_info[:posicion]
+                                info = [name, n] 
+                                
+               
+        if info[0] in lista_c_p and (info[1].isdigit() or info[1] in defined_variables or info[1] in lista_constantes):
            return True
         else:
             return False
@@ -480,7 +507,7 @@ def verificar_if_loop(tokens):
             else:
                 verificados_command.append(False)
     
-     
+
     if False in verificados_condition or False in verificados_command:
         return False
     else:
@@ -489,7 +516,7 @@ def verificar_if_loop(tokens):
 def verificar_repeat_times(tokens):
     lista_constantes = ['Dim', 'myXpos', 'myYpos', 'myChips', 'myBaloons', 'ballonsHere', 'ChipsHere', 'Spaces']
     for token in tokens:
-        if token.type == 'KEYWORD':
+        if token.type == KEYWORD:
             if 'repeat' in token.value:
                 variable = token.value[6:]
                 if is_valid_variable(variable) or variable in lista_constantes:
@@ -500,21 +527,34 @@ def verificar_repeat_times(tokens):
                     return False
 
 def verificar_defun(tokens):
-    params = []
     verificados = []
-    for token1 in tokens:
-        if (token1.type == KEYWORD) :
-            if ('defun' in token1.value):
+    for token in (tokens):
+        if token.type == KEYWORD:
+            if 'defun' in token.value:
+                if len(token.value) == 5:
+                    
+                    verificados.append(False)
+                else: 
+                    verificados.append(True)
+        
+       
+                
                 count = 1
                 while count < len(tokens):
-                    if tokens[count].type == STRING:
-                        parametro = tokens[count].value
-                        params.append(parametro)
-                    count = count +1
-    for token in (tokens):
-        if token.type == 'COMAND':
-            verificados.append(is_valid_comand(token.value, params))
-                
+                        if tokens[count].type == STRING:
+                            parametro = tokens[count].value
+                            
+                            paramver = is_valid_param(parametro)
+                            verificados.append(paramver)
+                        count = count +1
+        if token.type == COMAND:
+            verificados.append(is_valid_comand(token.value))  
+            
+    
+    if False in verificados:
+        return False
+    else:
+        return True       
                 
                     
     
@@ -533,16 +573,25 @@ def check_syntax(tokens):
         if token.type == KEYWORD:
             if 'defun' in token.value:
                 save_functions_variables(tokens)
+                verificados.append(verificar_defun(tokens))
                 continue
             if "if" in token.value or "loop" in token.value:
                 verificados.append(verificar_if_loop(tokens))
+            if "repeat" in token.value:
+                verificados.append(verificar_repeat_times(tokens))
+                
                 
         if token.type == STRING:
-            ver, name, par = funciones_arreglar(tokens)
-            if ver is True:
-                ver2 = is_valid_function_call(name, par)
-                verificados.append(ver2)
-          
+            for element in defined_functions.values():
+                if token.value in  element:
+                    continue
+                else:   
+                    ver, name, par = funciones_arreglar(tokens)
+                    if ver is True:
+                     
+                        ver2 = is_valid_function_call(name, par)
+                        verificados.append(ver2)
+ 
     if False in verificados:
         return False
     else:
@@ -557,12 +606,12 @@ def main(lista):
     bandera = True
     for linea in lista:
         tokenlinea = tokenize(linea)
-        print(tokenlinea)
+        
         if check_syntax(tokenlinea)is False:
             bandera = False
-            print('linea no funciona')
+            
             break
-        print('linea funciona')
+       
     if bandera == True:
         return True
     else:
