@@ -93,6 +93,7 @@ def is_valid_variable(name):
         return True
     else:
         return False
+    
 def is_valid_param(parametro):
     if (parametro in defined_variables) or parametro.isdigit():
         return True
@@ -196,20 +197,7 @@ def is_valid_condition(condition, tokens):
         
     if "not" in condition: 
         return True
-                    
-def verificar_condicion_if(tokens):
-    verificados = []
-    for token in tokens:
-        if token.type == CONDITION:
-            if is_valid_condition(token.value, tokens) == True:
-                verificados.append(True)
-            else:
-                verificados.append(False)
-    if False in verificados:
-        return False
-    else:
-        return True
-                
+                                   
 def parentesis_organizados(cadena):
     subcadenas = []
     nivel_parentesis = 0
@@ -266,6 +254,7 @@ def is_valid_comand(command):
     lista_constantes = ['Dim', 'myXpos', 'myYpos', 'myChips', 'myBaloons', 'ballonsHere', 'ChipsHere', 'Spaces']
     lista_c_p = ["chips", "balloons"]
     lista_move_dir = [ ":front", ":right", ":left", ":back"]
+    lista_move_dir2 = [ "front", "right", "left", "back"]
     
     if "defvar" in command:
         info = []
@@ -289,8 +278,34 @@ def is_valid_comand(command):
             return True
         else:
             return False 
-    
-    if "=" in command:
+        
+    elif "run-dirs" in command:
+        parts = command.split("run-dirs")
+        for element in parts:
+            if element == "":
+                parts.remove(element)
+                
+        partss = parts[0].split(":")
+        for element in partss:
+            if element == "":
+                partss.remove(element)
+                
+        visitados = []
+        for element in partss:
+            if element in lista_move_dir2:
+                visitados.append(True)
+            else: 
+                visitados.append(False)
+             
+        if len(partss) != 0:
+            if False in visitados:
+                return False
+            else:
+                return True
+        else:
+            return False
+        
+    elif "=" in command:
         info = []
         cadena_info = command[1:]
         for caracter in cadena_info:
@@ -313,18 +328,8 @@ def is_valid_comand(command):
             return True
         else:
             return False       
-        
-    if "move" in command:
-        parts = command.split("move")
-        for element in parts:
-            if element == "":
-                parts.remove(element)
-        if parts[0] in lista_constantes or parts[0] in defined_variables or parts[0].isdigit():
-            return True
-        else:
-            return False
-        
-    if "skip" in command:
+              
+    elif "skip" in command:
         parts = command.split("skip")
         for element in parts:
             if element == "":
@@ -334,7 +339,7 @@ def is_valid_comand(command):
         else:
             return False
         
-    if "turn" in command:
+    elif "turn" in command:
         parts = command.split("turn")
         for element in parts:
             if element == "":
@@ -344,7 +349,7 @@ def is_valid_comand(command):
         else:
             return False
         
-    if "face" in command:
+    elif "face" in command:
         parts = command.split("face")
         for element in parts:
             if element == "":
@@ -354,7 +359,7 @@ def is_valid_comand(command):
         else:
             return False
         
-    if "put" in command:
+    elif "put" in command:
         info = []
         cadena_info = command[3:]
         for caracter in cadena_info:
@@ -377,7 +382,7 @@ def is_valid_comand(command):
         else:
             return False  
         
-    if "pick" in command:
+    elif "pick" in command:
         info = []
         cadena_info = command[4:]
         for caracter in cadena_info:
@@ -400,7 +405,7 @@ def is_valid_comand(command):
         else:
             return False
         
-    if "move-dir" in command:  
+    elif "move-dir" in command:  
         info = []
         cadena_info = command[8:]
         for constante in lista_move_dir:
@@ -414,31 +419,9 @@ def is_valid_comand(command):
                 return True
         else:
                return False
-    
-    if "run-dirs" in command:
-        parts = command.split("run-dirs")
-        for element in parts:
-            if element == "":
-                parts.remove(element)
-        cleaned_string = parts[0].replace("[", "").replace("]", "").replace(" ", "")
         
-        partss = cleaned_string.split(",")
-        visitados = []
-        for element in partss:
-            if element in lista_move_dir:
-                visitados.append(True)
-            else: 
-                visitados.append(False)
-             
-        if len(partss) != 0:
-            if False in visitados:
-                return False
-            else:
-                return True
-        else:
-            return False
+    elif "move-face" in command:
         
-    if "move-face" in command:
         info = []
         cadena_info = command[9:]
         for constante in lista_dir:
@@ -451,9 +434,19 @@ def is_valid_comand(command):
         if ( info[0] in defined_variables or info[0].isdigit() ) and info[1] in lista_dir:
                 return True
         else:
-               return False
+               return True
         
-    if "null" in command:
+    elif "move" in command:
+        parts = command.split("move")
+        for element in parts:
+            if element == "":
+                parts.remove(element)
+        if parts[0] in lista_constantes or parts[0] in defined_variables or parts[0].isdigit():
+            return True
+        else:
+            return False
+        
+    elif "null" in command:
         return True
     
 def verificar_if_loop(tokens):
@@ -478,77 +471,54 @@ def verificar_if_loop(tokens):
     
 def verificar_repeat_times():
     pass
-    
+
+def verificar_defun():
+    pass
             
 def check_syntax(tokens):
-    
-    """for token in tokens:
-     
+    verificados = []
+    for token in tokens:
         if token.type == SEPARATOR:
             continue
         if token.type == COMAND:
-            if "defvar"  in token.value:
+            if "defvar" in token.value:
                 save_functions_variables(tokens)
-                if is_valid_comand(token.value):
-                    return True
-                else:
-                    return False
-            
-        if token.type == KEYWORD :
+                verificados.append(is_valid_comand(token.value))
+            else:
+                verificados.append(is_valid_comand(token.value))
+        if token.type == KEYWORD:
             if 'defun' in token.value:
                 save_functions_variables(tokens)
                 continue
-            elif token.value == "defun":
-                if len(current_block) > 0:
-                    return False  # Defun should be at the beginning of a block
-                next_token = next(iter(tokens))
-                if not is_valid_variable(next_token.value):
-                    return False
-                params = []
-                while True:
-                    next_token = next(iter(tokens))
-                    if next_token.type == SEPARATOR and next_token.value == ")":
-                        break
-                    if not is_valid_variable(next_token.value):
-                        return False
-                    params.append(next_token.value)
-                defined_functions[next_token.value] = {"params": params}
-                continue
-            elif token.value == "if":
-                verificar_if_loop(tokens)
-                
-            elif token.value in ["loop", "repeat"]:
-                if not check_syntax(current_block):
-                    return False
-                current_block = []
-            elif token.value == "null":
-                continue
-            else:
-                if token.value not in defined_variables and token.value not in defined_functions:
-                    return False
-        elif token.type == VARIABLE:
-            if token.value not in defined_variables and token.value not in defined_functions:
-                return False
-        current_block.append(token)
-  
-    if len(current_block) > 0 and not check_syntax(current_block):
+            if "if" in token.value or "loop" in token.value:
+                verificados.append(verificar_if_loop(tokens))
+            
+        if token.type == STRING:
+            ver, name, par = funciones_arreglar(tokens)
+            if ver is True:
+                ver2 = is_valid_function_call(name, par)
+                verificados.append(ver2)
+    print(verificados)       
+    if False in verificados:
         return False
-    return True"""
+    else:
+        return True
+                
+
 
 def iniciar(lista):
     return main(lista)
 
 def main(lista):
     bandera = True
-    #for linea in lista:
-    linea = '(defunfill()(repeatSpaces(if(not(isZero?myChips))(put:chips1)(null))))'
-    tokenlinea = tokenize(linea)
-    print(tokenlinea)
-    if check_syntax(tokenlinea)is False:
+    for linea in lista:
+        tokenlinea = tokenize(linea)
+        print(tokenlinea)
+        if check_syntax(tokenlinea)is False:
             bandera = False
-
-            #break
-
+            print('linea no funciona')
+            break
+        print('linea funciona')
     if bandera == True:
         return True
     else:
