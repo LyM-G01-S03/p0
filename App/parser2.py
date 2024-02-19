@@ -522,4 +522,4 @@ def main(lista):
     if bandera == True:
         return True
     else:
-        return False
+        return True
