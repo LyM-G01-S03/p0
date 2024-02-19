@@ -79,18 +79,42 @@ def tokenize(text):
 
 # Define functions to check syntax and consistency
 def is_valid_variable(name):
-    if name in defined_variables:
+    if (name in defined_variables):
+        return True
+    else:
+        return False
+def is_valid_param(parametro):
+    if (parametro in defined_variables) or parametro.isdigit():
         return True
     else:
         return False
 
-def is_valid_function_call(name, params):
+def is_valid_function_call(name, params=None):
     if name not in defined_functions:
         return False
     expected_params = defined_functions[name]["params"]
-    return len(expected_params) == len(params) and all(is_valid_variable(p) for p in params)
+    return (len(expected_params) == len(params)) and all(is_valid_param(p) for p in params)
 
-
+def funciones_arreglar(tokens):
+    parametros = []
+    name = None
+    for funcion in defined_functions:
+        for token in tokens:
+            if token.type == STRING:
+                if 'defun' in token.value:
+                    return False, None, None
+                if funcion in token.value:
+                    name = funcion
+                    if len(funcion) == len(token.value):
+                        parametros = None
+                        return True, name, None                        
+                    else:
+                        parametro = token.value[len(funcion):]
+                        parametros.append(parametro)
+                if (funcion not in token.value) and (name == funcion)  and ((len(parametros) > 0) or (len(parametros) is not None)):
+                    parametros.append(token.value)
+                return  True, name, parametros 
+                
 def is_valid_condition(condition, tokens):
     lista_dir = [":north", ":south", ":west", ":east"]
     lista_c_p = ["chips", "balloons"]
@@ -162,26 +186,6 @@ def is_valid_condition(condition, tokens):
     if "not" in condition: 
         return True
                     
-            
-        
-
-
-def parentesis_organizados(cadena):
-    subcadenas = []
-    nivel_parentesis = 0
-    inicio_subcadena = 0
-    for i, char in enumerate(cadena):
-        if char == '(':
-            nivel_parentesis += 1
-            if nivel_parentesis == 1:
-                inicio_subcadena = i
-        elif char == ')':
-            nivel_parentesis -= 1
-            if nivel_parentesis == 0:
-                subcadenas.append(cadena[inicio_subcadena:i+1])
-                inicio_subcadena = i + 1
-    return subcadenas
-
 def verificar_condicion_if(tokens):
     verificados = []
     for token in tokens:
@@ -195,7 +199,6 @@ def verificar_condicion_if(tokens):
     else:
         return True
                 
-
 def parentesis_organizados(cadena):
     subcadenas = []
     nivel_parentesis = 0
@@ -248,7 +251,6 @@ def save_functions_variables(tokens):
             if 'defun' in token.value:
                 nombre = token.value[5:]
                 defined_functions[nombre] = params
-    print(defined_functions) 
             
 def check_syntax(tokens):
     current_block = []
@@ -306,7 +308,7 @@ def iniciar(lista):
 def main(lista):
     bandera = True
     #for linea in lista:
-    linea = '(defunfoo(c,p)(put:chipsc)(put:balloonsp)(moverotate))'
+    linea = '(foo1,3)'
     tokenlinea = tokenize(linea)
     print(tokenlinea)
     if check_syntax(tokenlinea)is False:

@@ -35,32 +35,36 @@ def load_data(nombre):
     with open(archivo, 'r') as file:
         lineas = file.readlines()
     lista_mod = []
-    for posicion, linea in enumerate(lineas):
+    funciones = []
+    for linea in lineas:
         if '(defun' in linea:
-            posiciones = []
-            posicion = 0  # Reiniciar la posición para cada línea
-            while True:
-                posicion = linea.find('defun', posicion)
-                if posicion == -1:
-                    break
-                posiciones.append(posicion)
-                posicion += 1
-            for position in posiciones:
-                indice_parentesis_abierto = linea.find("(", position)
-                # Buscar la posición del siguiente paréntesis de cierre ')'
-                indice_parentesis_cerrado = linea.find(")", indice_parentesis_abierto)
-                if indice_parentesis_abierto != -1 and indice_parentesis_cerrado != -1:
-                    # Extraer el contenido entre paréntesis
-                    contenido_paréntesis = linea[indice_parentesis_abierto + 1:indice_parentesis_cerrado]
-                    # Reemplazar los espacios por comas
-                    contenido_modificado = contenido_paréntesis.replace(" ", ",")
-                    # Construir la cadena modificada con los cambios
-                    linea_modificada = linea[:indice_parentesis_abierto + 1] + contenido_modificado + linea[indice_parentesis_cerrado:]
-                    # Actualizar la lista 'lineas' con la línea modificada
-                    lista_mod.append(linea_modificada)
+            posiciondef = linea.find('defun')
+            indice_parentesis_abierto = linea.find("(", posiciondef)
+            nombrefun = linea[6:indice_parentesis_abierto]
+            funciones.append(nombrefun)
+            # Buscar la posición del siguiente paréntesis de cierre ')'
+            indice_parentesis_cerrado = linea.find(")", indice_parentesis_abierto)
+            contenido_paréntesis = linea[indice_parentesis_abierto + 1:indice_parentesis_cerrado]
+            # Reemplazar los espacios por comas
+            contenido_modificado = contenido_paréntesis.replace(" ", ",")
+            # Construir la cadena modificada con los cambios
+            linea_modificada = linea[:indice_parentesis_abierto + 1] + contenido_modificado + linea[indice_parentesis_cerrado:]
+            # Actualizar la lista 'lineas' con la línea modificada
+            lista_mod.append(linea_modificada)
         else:
             lista_mod.append(linea)
-    
+        for funcion in (funciones):
+            funcion = funcion.strip()
+            if (funcion in linea) and ('defun' not in linea):
+                parentesis_open = linea.find("(")
+                if parentesis_open != -1:
+                    posicion1 = int(linea.find(' '))
+                    parentesis_close = int(linea.find(")"))
+                    content = linea[posicion1+1: parentesis_close]
+                    content_modificado = content.replace(" ", ",")
+                    linea_mod_2 = linea[:posicion1 + 1] + content_modificado + linea[parentesis_close:]
+                    lista_mod[lista_mod.index(linea)] = linea_mod_2
+                    
     for i, linea in enumerate(lista_mod):
         if linea == '\n':
             lista_mod.remove('\n')
@@ -70,7 +74,6 @@ def load_data(nombre):
     contenido = ''.join(linea.replace(' ', '').strip() for linea in lista_mod)
      
     lista_org = separar_por_parentesis(contenido)
-    
     
     if len(lista_org) == 0:
         return False

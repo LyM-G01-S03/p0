@@ -76,7 +76,7 @@ def guardarvarfun(subcadenas):
     return True
 
 verificar(['(defvarrotate300)', '(if(can-move?:north)(move-face1:north)(null))', 
-           '((if(not(blocked?))(move1)(null))(turn:left))', '(defvarone1)', '(defunfoo(c,p)(put:chipsc)(put:balloonsp)(moverotate))', '(foo13)', 
+           '((if(not(blocked?))(move1)(null))(turn:left))', '(defvarone1)', '(defunfoo(c,p)(put:chipsc)(put:balloonsp)(moverotate))', '(foo1,3)', 
            '(defungoend()(if(not(blocked?))((moveone)(goend))(null)))', '(defunfill()(repeatSpaces(if(not(isZero?myChips))(put:chips1)(null))))', 
            '(defunpickAllB()(pick:balloonsballoonsHere))', '(run-dirs:left:front:left:back:right)'])
 print(defined_functions)
