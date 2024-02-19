@@ -237,6 +237,7 @@ def save_functions_variables(tokens):
                         n = cadena_info[posicion:]
                         name = cadena_info[:posicion]
                         defined_variables[name]=n
+                        print(name, n)
                         break
                 for constante in lista_constantes:
                     if constante in cadena_info:
@@ -257,7 +258,7 @@ def check_syntax(tokens):
      
         if token.type == SEPARATOR:
             continue
-        if token.type == KEYWORD:
+        if token.type == KEYWORD or COMAND:
             if "defvar" or 'defun' in token.value:
                 save_functions_variables(tokens)
                 continue
@@ -307,7 +308,7 @@ def iniciar(lista):
 def main(lista):
     bandera = True
     #for linea in lista:
-    linea = "((if(not(blocked?))(move1)(null))(turn:left))"
+    linea = "(defvarrotate300)"
     tokenlinea = tokenize(linea)
     if check_syntax(tokenlinea)is False:
             bandera = False
