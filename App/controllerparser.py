@@ -74,6 +74,7 @@ def load_data(nombre):
     contenido = ''.join(linea.replace(' ', '').strip() for linea in lista_mod)
      
     lista_org = separar_por_parentesis(contenido)
+   
     
     if len(lista_org) == 0:
         return False
