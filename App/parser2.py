@@ -3,44 +3,53 @@ import config as cf
 # Define tokens
 Token = namedtuple("Token", ["type", "value"])
 KEYWORD = "KEYWORD"
+COMAND = "COMAND"
+CONDITION = "CONDITION"
 NUMBER = "NUMBER"
 VARIABLE = "VARIABLE"
 STRING = "STRING"
-OPERATOR = "OPERATOR"
 SEPARATOR = "SEPARATOR"
 
 # Define keywords and operators
 KEYWORDS = {
-    "defvar": KEYWORD,
-    "=": KEYWORD,
-    "move": KEYWORD,
-    "skip": KEYWORD,
-    "turn": KEYWORD,
-    "face": KEYWORD,
-    "put": KEYWORD,
-    "pick": KEYWORD,
-    "move-dir": KEYWORD,
-    "run-dirs": KEYWORD,
-    "move-face": KEYWORD,
-    "null": KEYWORD,
+    
     "if": KEYWORD,
     "loop": KEYWORD,
     "repeat": KEYWORD,
     "defun": KEYWORD,
-    "facing?": KEYWORD,
-    "blocked?": KEYWORD,
-    "can-put?": KEYWORD,
-    "can-pick?": KEYWORD,
-    "can-move?": KEYWORD,
-    "isZero?": KEYWORD,
-    "not": KEYWORD,
 }
-NUMBER = {1: NUMBER, 2: NUMBER, 3: NUMBER, 4: NUMBER, 5: NUMBER, 6: NUMBER, 7: NUMBER, 8: NUMBER, 9: NUMBER, 0: NUMBER}
-OPERATORS = {"+": OPERATOR, "-": OPERATOR, "*": OPERATOR, "/": OPERATOR}
+
+COMANDS = {
+    "defvar": COMAND,
+    "=": COMAND,
+    "move": COMAND,
+    "skip": COMAND,
+    "turn": COMAND,
+    "face": COMAND,
+    "put": COMAND,
+    "pick": COMAND,
+    "move-dir": COMAND,
+    "run-dirs": COMAND,
+    "move-face": COMAND,
+    "null": COMAND,
+}
+
+NUMBERS = {1: NUMBER, 2: NUMBER, 3: NUMBER, 4: NUMBER, 5: NUMBER, 6: NUMBER, 7: NUMBER, 8: NUMBER, 9: NUMBER, 0: NUMBER}
 SEPARATORS = {",": SEPARATOR, "(": SEPARATOR, ")": SEPARATOR, ";": SEPARATOR}
+CONDITIONS = {    
+    "facing?": CONDITION,
+    "blocked?": CONDITION,
+    "can-put?": CONDITION,
+    "can-pick?": CONDITION,
+    "can-move?": CONDITION,
+    "isZero?": CONDITION,
+    "not": CONDITION,}
  
 
 def keywords_verification(current_token: str) -> str:
+    for keyword in CONDITIONS.keys():
+        if keyword in current_token:
+            return CONDITION
     for keyword in KEYWORDS.keys():
         if keyword in current_token:
             return KEYWORD
@@ -51,7 +60,6 @@ def tokenize(text):
     tokens = []
     current_token = ""
     for char in text:
-    
         if char.isalpha():
             current_token += char
         elif char.isdigit():
@@ -60,11 +68,6 @@ def tokenize(text):
             if current_token:
                 tokens.append(Token(keywords_verification(current_token), current_token))
             tokens.append(Token(SEPARATOR, char))
-            current_token = ""
-        elif char in "+-*/":
-            if current_token:
-                tokens.append(Token(keywords_verification(current_token), current_token))
-            tokens.append(Token(OPERATOR, char))
             current_token = ""
         else:
             current_token += char
@@ -88,19 +91,96 @@ def is_valid_function_call(name, params):
     return len(expected_params) == len(params) and all(is_valid_variable(p) for p in params)
 
 
-def is_valid_condition(condition):
-    if condition[0] in KEYWORDS:
-        if condition[0] == "facing?":
-            return len(condition) == 2 and condition[1] in ["north", "south", "east", "west"]
-        elif condition[0] == "blocked?":
-            return len(condition) == 1
-        elif condition[0] in ["can-put?", "can-pick?", "can-move?"]:
-            return len(condition) == 3 and condition[1] in ["chips", "balloons"] and is_valid_variable(condition[2])
-        elif condition[0] == "isZero?":
-            return len(condition) == 2 and is_valid_variable(condition[1])
-        elif condition[0] == "not":
-            return len(condition) == 2 and is_valid_condition(condition[1])
-    return False
+def is_valid_condition(condition, tokens):
+    lista_dir = [":north", ":south", ":west", ":east"]
+    lista_c_p = ["chips", "balloons"]
+    if "facing?" in condition:
+        parts = condition.split("facing?")
+        for element in parts:
+            if element == "":
+                parts.remove(element)
+        if parts[0] in lista_dir:
+            return True
+        else:
+            return False
+                
+    if "blocked?" in condition:  
+        return True
+        
+    if "can-put?" in condition: 
+        info = []
+        cadena_info = condition[8:]
+        for caracter in cadena_info:
+                    if caracter.isdigit():
+                        posicion = cadena_info.find(caracter)
+                        n = cadena_info[posicion:]
+                        name = cadena_info[:posicion]
+                        if len(info) < 2:
+                            info.append(name)
+                            info.append(n)
+        if info[0] in lista_c_p and n.isdigit():
+            return True
+        else:
+            return False
+        
+    if "can-pick?" in condition:
+        info = []
+        cadena_info = condition[9:]
+        for caracter in cadena_info:
+                    if caracter.isdigit():
+                        posicion = cadena_info.find(caracter)
+                        n = cadena_info[posicion:]
+                        name = cadena_info[:posicion]
+                        if len(info) < 2:
+                            info.append(name)
+                            info.append(n)
+        if info[0] in lista_c_p and n.isdigit():
+            return True
+        else:
+            return False
+        
+    if "can-move?" in condition:
+        parts = condition.split("can-move?")
+        for element in parts:
+            if element == "":
+                parts.remove(element)
+        if parts[0] in lista_dir:
+            return True
+        else:
+            return False
+        
+    if "isZero?" in condition:
+        parts = condition.split("isZero?")
+        for element in parts:
+            if element == "":
+                parts.remove(element)
+        if parts[0].isdigit():
+            return True
+        else:
+            return False
+        
+    if "not" in condition: 
+        return True
+                    
+            
+        
+
+
+def parentesis_organizados(cadena):
+    subcadenas = []
+    nivel_parentesis = 0
+    inicio_subcadena = 0
+    for i, char in enumerate(cadena):
+        if char == '(':
+            nivel_parentesis += 1
+            if nivel_parentesis == 1:
+                inicio_subcadena = i
+        elif char == ')':
+            nivel_parentesis -= 1
+            if nivel_parentesis == 0:
+                subcadenas.append(cadena[inicio_subcadena:i+1])
+                inicio_subcadena = i + 1
+    return subcadenas
 
 def parentesis_organizados(cadena):
     subcadenas = []
@@ -121,7 +201,7 @@ def parentesis_organizados(cadena):
 defined_variables = {}
 defined_functions = {}
     
-def save_funcionts_variables(tokens):
+def save_functions_variables(tokens):
     lista_constantes = ['Dim', 'myXpos', 'myYpos', 'myChips', 'myBaloons', 'ballonsHere', 'ChipsHere', 'Spaces']
     params = []
     for token1 in tokens:
@@ -160,6 +240,7 @@ def save_funcionts_variables(tokens):
 def check_syntax(tokens):
     current_block = []
     for token in tokens:
+     
         if token.type == SEPARATOR:
             continue
         if token.type == KEYWORD:
@@ -182,7 +263,10 @@ def check_syntax(tokens):
                     params.append(next_token.value)
                 defined_functions[next_token.value] = {"params": params}
                 continue
-            elif token.value in ["if", "loop", "repeat"]:
+            elif token.value == "if":
+                verificar_condicion_if(tokens)
+                
+            elif token.value in ["loop", "repeat"]:
                 if not check_syntax(current_block):
                     return False
                 current_block = []
@@ -193,9 +277,6 @@ def check_syntax(tokens):
                     return False
         elif token.type == VARIABLE:
             if token.value not in defined_variables and token.value not in defined_functions:
-                return False
-        elif token.type == OPERATOR:
-            if len(current_block) <= 1:
                 return False
         elif token.type == STRING:
             if token.value not in ["north", "south", "east", "west", "chips", "balloons"]:
@@ -212,9 +293,8 @@ def iniciar(lista):
 def main(lista):
     bandera = True
     #for linea in lista:
-    linea = '(defvarrotate300)'
+    linea = "((if(not(blocked?))(move1)(null))(turn:left))"
     tokenlinea = tokenize(linea)
-    print(tokenlinea)
     if check_syntax(tokenlinea)is False:
             bandera = False
 
